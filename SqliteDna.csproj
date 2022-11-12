@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net7.0-windows</TargetFramework>
+		<RuntimeIdentifier>win-x86</RuntimeIdentifier>
+		<EnableDynamicLoading>true</EnableDynamicLoading>
+
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="DNNE" Version="1.0.32" />
+	</ItemGroup>
+
+</Project>
