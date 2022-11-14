@@ -13,9 +13,9 @@ namespace SqliteDna
 
         [UnmanagedCallersOnly(EntryPoint = "sqlite3_sqlitednane_init", CallConvs = new[] { typeof(CallConvCdecl) })]
         public unsafe static int sqlite3_sqlitednane_init( /* <== Change this name, maybe */
-            /* sqlite3* */ void* db,
-            /* char** */ void** pzErrMsg,
-            /* sqlite3_api_routines* */ void* pApi
+            /* sqlite3* */ IntPtr db,
+            /* char** */ byte** pzErrMsg,
+            /* sqlite3_api_routines* */ IntPtr pApi
             )
         {
             _sqliteApi = *(sqlite3_api_routines*)pApi;
@@ -24,19 +24,19 @@ namespace SqliteDna
                 db,
                 StringToSqliteUtf8("addthem"),
                 2,
-                (int)TextEncodings.SQLITE_UTF8,
-                (void*)IntPtr.Zero,
-                (void*)(delegate* unmanaged[Cdecl]<void*, int, void**, int>)(&AddThem),
-                (void*)IntPtr.Zero,
-                (void*)IntPtr.Zero,
-                (void*)IntPtr.Zero
+                TextEncodings.SQLITE_UTF8,
+                IntPtr.Zero,
+                &AddThem,
+                IntPtr.Zero,
+                IntPtr.Zero,
+                IntPtr.Zero
                 );
 
             return create_result;
 
             Console.WriteLine("Hello from SqliteDna!");
 
-            *(void**)pzErrMsg = StringToSqliteUtf8("Things went wrong!");
+            *pzErrMsg = StringToSqliteUtf8("Things went wrong!");
             return SQLITE_ERROR;
 
             //int rc = SQLITE_OK;
@@ -56,12 +56,12 @@ namespace SqliteDna
         }
 
         [UnmanagedCallersOnly(CallConvs = new[] { typeof(CallConvCdecl) })]
-        public static unsafe int AddThem(void* /* sqlite3_context* */ context, int argc, void** /* sqlite3_value** */ argv)
+        public static unsafe int AddThem(IntPtr /* sqlite3_context* */ context, int argc, IntPtr /* sqlite3_value** */ argv)
         {
-            IntPtr* values = (IntPtr*)argv;
+            IntPtr* pValues = (IntPtr*)argv;
 
-            double a = _sqliteApi.value_double((void*)values[0]);
-            double b = _sqliteApi.value_double((void*)values[1]);
+            double a = _sqliteApi.value_double(pValues[0]);
+            double b = _sqliteApi.value_double(pValues[1]);
             double c = a + b;
             _sqliteApi.result_double(context, c);
             return SQLITE_OK;

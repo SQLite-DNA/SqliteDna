@@ -3,7 +3,7 @@
 namespace SqliteDna
 {
     [StructLayout(LayoutKind.Sequential)] // Just a list of function pointers, so we probably don't have to worry about alignment
-    unsafe struct sqlite3_api_routines
+    public unsafe struct sqlite3_api_routines
     {
         IntPtr p000; //  void * (*aggregate_context)(sqlite3_context*,int nBytes);
         IntPtr p001; //  int  (*aggregate_count)(sqlite3_context*);
@@ -54,7 +54,7 @@ namespace SqliteDna
                      //                           int(*)(void*,int,const void*,int,const void*));
         IntPtr p044; //  int  (*create_collation16)(sqlite3*,const void*,int,void*,
                      //                             int(*)(void*,int,const void*,int,const void*));
-        public readonly delegate* unmanaged[Cdecl]<void*, void*, int, int, void*, void*, void*, void*, int> create_function;
+        public readonly delegate* unmanaged[Cdecl]<IntPtr, IntPtr, int, int, IntPtr, IntPtr, IntPtr, IntPtr, int> create_function;
                      //  int  (*create_function)(sqlite3*,const char*,int,int,void*,
                      //                          void (*xFunc)(sqlite3_context*,int,sqlite3_value**),
                      //                          void (*xStep)(sqlite3_context*,int,sqlite3_value**),
@@ -84,7 +84,7 @@ namespace SqliteDna
         IntPtr p065; //  sqlite_int64  (*last_insert_rowid)(sqlite3*);
         IntPtr p066; //  const char * (*libversion)(void);
         IntPtr p067; //  int  (*libversion_number)(void);
-        public readonly delegate* unmanaged[Cdecl] <int, void*> malloc; // void *(*malloc)(int);
+        public readonly delegate* unmanaged[Cdecl] <int, IntPtr> malloc; // void *(*malloc)(int);
         IntPtr p069; //  char * (*mprintf)(const char*,...);
         IntPtr p070; //  int  (*open)(const char*,sqlite3**);
         IntPtr p071; //  int  (*open16)(const void*,sqlite3**);
@@ -95,7 +95,7 @@ namespace SqliteDna
         IntPtr p076; //  void *(*realloc)(void*,int);
         IntPtr p077; //  int  (*reset)(sqlite3_stmt*pStmt);
         IntPtr p078; //  void  (*result_blob)(sqlite3_context*,const void*,int,void(*)(void*));
-        public readonly delegate* unmanaged[Cdecl]<void*, double, void> result_double; //  void  (*result_double)(sqlite3_context*,double);
+        public readonly delegate* unmanaged[Cdecl]<IntPtr, double, void> result_double; //  void  (*result_double)(sqlite3_context*,double);
         IntPtr p080; //  void  (*result_error)(sqlite3_context*,const char*,int);
         IntPtr p081; //  void  (*result_error16)(sqlite3_context*,const void*,int);
         IntPtr p082; //  void  (*result_int)(sqlite3_context*,int);
@@ -124,7 +124,7 @@ namespace SqliteDna
         IntPtr p102; //  const void * (*value_blob)(sqlite3_value*);
         IntPtr p103; //  int  (*value_bytes)(sqlite3_value*);
         IntPtr p104; //  int  (*value_bytes16)(sqlite3_value*);
-        public readonly delegate* unmanaged[Cdecl]<void*, double> value_double; //  double  (*value_double)(sqlite3_value*);
+        public readonly delegate* unmanaged[Cdecl]<IntPtr, double> value_double; //  double  (*value_double)(sqlite3_value*);
         IntPtr p106; //  int  (*value_int)(sqlite3_value*);
         IntPtr p107; //  sqlite_int64  (*value_int64)(sqlite3_value*);
         IntPtr p108; //  int  (*value_numeric_type)(sqlite3_value*);
@@ -189,7 +189,7 @@ namespace SqliteDna
         IntPtr p159; //  int (*backup_step)(sqlite3_backup*,int);
         IntPtr p160; //  const char *(*compileoption_get)(int);
         IntPtr p161; //  int (*compileoption_used)(const char*);
-        public readonly delegate* unmanaged[Cdecl]<void*, void*, int, int, void*, void*, void*, void*, void*, int> create_function_v2;
+        public readonly delegate* unmanaged[Cdecl]<IntPtr, byte*, int, TextEncodings, IntPtr, delegate* unmanaged[Cdecl]<IntPtr, int, IntPtr, int>, IntPtr, IntPtr, IntPtr, int> create_function_v2;
                      //  int (*create_function_v2)(sqlite3*,const char*,int,int,void*,
                      //                            void (*xFunc)(sqlite3_context*,int,sqlite3_value**),
                      //                            void (*xStep)(sqlite3_context*,int,sqlite3_value**),
