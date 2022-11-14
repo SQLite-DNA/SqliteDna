@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "sqlite3-x64": {
+      "commandName": "Executable",
+      "executablePath": "C:\\Work\\GitHub\\govert\\SqliteDna\\bin\\Debug\\net7.0-windows\\win-x64\\sqlite3-x64.exe"
+    }
+  }
+}

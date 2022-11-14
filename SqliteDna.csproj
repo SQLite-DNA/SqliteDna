@@ -2,12 +2,18 @@
 
 	<PropertyGroup>
 		<TargetFramework>net7.0-windows</TargetFramework>
-		<RuntimeIdentifier>win-x86</RuntimeIdentifier>
+		<RuntimeIdentifier>win-x64</RuntimeIdentifier>
+		<!--<RuntimeIdentifier>win-x86</RuntimeIdentifier>-->
 		<EnableDynamicLoading>true</EnableDynamicLoading>
 
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
+		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 	</PropertyGroup>
+
+	<ItemGroup>
+	  <Compile Remove="Sqlite-net.cs" />
+	</ItemGroup>
 
 	<ItemGroup>
 		<PackageReference Include="DNNE" Version="1.0.32" />
