@@ -11,8 +11,10 @@ namespace SqliteDna
         const int SQLITE_OK = 0; /* Successful result */
         const int SQLITE_ERROR = 1;
 
-        [UnmanagedCallersOnly(EntryPoint = "sqlite3_sqlitednane_init", CallConvs = new[] { typeof(CallConvCdecl) })]
-        public unsafe static int sqlite3_sqlitednane_init( /* <== Change this name, maybe */
+        // When using PublishAOT and not DNNE, the final .dll is called SqliteDna.dll instead of SqliteDnaNE.dll.
+        // By default, SQLite looks for a function with a name derived from the .dll name.
+        [UnmanagedCallersOnly(EntryPoint = "sqlite3_sqlitedna_init", CallConvs = new[] { typeof(CallConvCdecl) })]
+        public unsafe static int sqlite3_sqlitedna_init( /* <== Change this name, maybe */
             /* sqlite3* */ IntPtr db,
             /* char** */ byte** pzErrMsg,
             /* sqlite3_api_routines* */ IntPtr pApi
