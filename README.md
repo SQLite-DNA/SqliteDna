@@ -14,4 +14,5 @@ This is an early experiment. If you're interested in the project, let me know.
 * https://github.com/nalgeon/sqlean
 * https://github.com/x2bool/xlite
 * https://sqlsharp.com/features/
-* https://github.com/tcdi/pgx - PostgreSQL extensions with Rust
+* https://github.com/tcdi/pgx - Build PostgreSQL extensions with Rust
+* https://learn.microsoft.com/en-us/azure/postgresql/single-server/concepts-extensions - List of PostgreSQL extensions available in Azure
