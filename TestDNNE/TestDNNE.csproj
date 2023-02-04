@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net7.0-windows</TargetFramework>
+		<RuntimeIdentifier>win-x64</RuntimeIdentifier>
+
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+
+		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+		<EnableDynamicLoading>true</EnableDynamicLoading>
+		<PublishAOT>false</PublishAOT>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\SqliteDna.SourceGenerator\SqliteDna.SourceGenerator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false"/>
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="DNNE" Version="1.0.32" />
+	</ItemGroup>
+
+</Project>

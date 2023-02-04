@@ -36,10 +36,10 @@ namespace SqliteDna
 
             return create_result;
 
-            Console.WriteLine("Hello from SqliteDna!");
+            //Console.WriteLine("Hello from SqliteDna!");
 
-            *pzErrMsg = StringToSqliteUtf8("Things went wrong!");
-            return SQLITE_ERROR;
+            //*pzErrMsg = StringToSqliteUtf8("Things went wrong!");
+            //return SQLITE_ERROR;
 
             //int rc = SQLITE_OK;
             ////        SQLITE_EXTENSION_INIT2(pApi);
