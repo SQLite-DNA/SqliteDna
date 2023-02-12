@@ -9,7 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestDNNE", "TestDNNE\TestDN
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SqliteDna.SourceGenerator", "SqliteDna.SourceGenerator\SqliteDna.SourceGenerator.csproj", "{150F6BD9-B588-4B29-8436-DE56929A3F0B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SqliteDna.Integration", "SqliteDna.Integration\SqliteDna.Integration.csproj", "{C3C2E460-5397-4483-A2CE-E50D28B759E1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SqliteDna.Integration", "SqliteDna.Integration\SqliteDna.Integration.csproj", "{C3C2E460-5397-4483-A2CE-E50D28B759E1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestAOT", "TestAOT\TestAOT.csproj", "{8765DE89-B8D0-425A-961B-147D299A71C3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{C3C2E460-5397-4483-A2CE-E50D28B759E1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C3C2E460-5397-4483-A2CE-E50D28B759E1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C3C2E460-5397-4483-A2CE-E50D28B759E1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8765DE89-B8D0-425A-961B-147D299A71C3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8765DE89-B8D0-425A-961B-147D299A71C3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8765DE89-B8D0-425A-961B-147D299A71C3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8765DE89-B8D0-425A-961B-147D299A71C3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
