@@ -39,7 +39,7 @@ namespace SqliteDna.SourceGenerator
     }
 }
 """;
-            string assemblyName = context.Compilation.AssemblyName;
+            string assemblyName = context.Compilation.AssemblyName!;
             string assemblyNameSuffix = string.Compare(publishAOT, "true", true) == 0 ? "" : "ne";
             source = source.Replace("[ASSEMBLY-NAME]", assemblyName.ToLower() + assemblyNameSuffix);
 
@@ -82,7 +82,7 @@ namespace SqliteDna.SourceGenerator
             {
                 if (context.Node is MethodDeclarationSyntax methodDeclarationSyntax)
                 {
-                    Functions.Add(context.SemanticModel.GetDeclaredSymbol(methodDeclarationSyntax) as IMethodSymbol);
+                    Functions.Add((context.SemanticModel.GetDeclaredSymbol(methodDeclarationSyntax) as IMethodSymbol)!);
                 }
             }
         }

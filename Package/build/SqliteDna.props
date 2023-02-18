@@ -5,6 +5,10 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<CompilerVisibleProperty Include="PublishAOT" />
+	</ItemGroup>
+
+	<ItemGroup Condition="'$(PublishAOT)' != 'true'">
 		<PackageReference Include="DNNE" Version="1.0.32" />
 	</ItemGroup>
 </Project>
