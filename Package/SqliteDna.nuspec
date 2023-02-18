@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+    <metadata>
+        <id>SqliteDna</id>
+        <version>1.0.0</version>
+        <title>Sqlite-DNA</title>
+        <authors>Govert van Drimmelen</authors>
+        <owners>Govert van Drimmelen</owners>
+        <projectUrl>https://github.com/SQLite-DNA/SqliteDna</projectUrl>
+        <repository type="git" url="https://github.com/SQLite-DNA/SqliteDna" />
+        <description>Sqlite-DNA support writing SQLite extensions with .NET.</description>
+        <summary>Sqlite-DNA support writing SQLite extensions with .NET.</summary>
+        <tags>SQLite .NET C#</tags>
+        <dependencies>
+          <group targetFramework="net7.0" />
+        </dependencies>
+    </metadata>
+    <files>
+        <file src="..\SqliteDna.Integration\bin\Release\net7.0\SqliteDna.Integration.dll" target="lib\net7.0" />
+        <file src="..\SqliteDna.SourceGenerator\bin\Release\netstandard2.0\SqliteDna.SourceGenerator.dll" target="analyzers\dotnet\cs" />
+      <file src="build\SqliteDna.props" target="build" />
+    </files>
+</package>
