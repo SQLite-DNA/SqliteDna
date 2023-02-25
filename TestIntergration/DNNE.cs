@@ -10,7 +10,7 @@ namespace TestIntergration
             using (var connection = new SqliteConnection("Data Source=:memory:"))
             {
                 connection.Open();
-                connection.LoadExtension("TestDNNETargetNE.dll");
+                connection.LoadExtension("TestDNNENE.dll");
                 {
                     var command = connection.CreateCommand();
                     command.CommandText = @"SELECT Too2()";

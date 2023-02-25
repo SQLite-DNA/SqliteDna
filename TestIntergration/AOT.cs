@@ -10,7 +10,7 @@ namespace TestIntergration
             using (var connection = new SqliteConnection("Data Source=:memory:"))
             {
                 connection.Open();
-                connection.LoadExtension("TestAOTTarget.dll");
+                connection.LoadExtension("TestAOT.dll");
                 {
                     var command = connection.CreateCommand();
                     command.CommandText = @"SELECT Woo2()";
