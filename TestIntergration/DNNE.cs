@@ -2,7 +2,7 @@ using Microsoft.Data.Sqlite;
 
 namespace TestIntergration
 {
-    public class DNNETarget
+    public class DNNE
     {
         [Fact]
         public void TestFunctions()

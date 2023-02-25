@@ -23,7 +23,7 @@
 	</ItemGroup>
 
 	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
-		<Exec Command="xcopy /y $(SolutionDir)TestDNNETarget\bin\$(ConfigurationName)\net7.0\TestDNNETargetNE.dll $(TargetDir)&#xD;&#xA;xcopy /y $(SolutionDir)TestDNNETarget\bin\$(ConfigurationName)\net7.0\TestDNNETarget.runtimeconfig.json $(TargetDir)" />
+		<Exec Command="xcopy /y $(SolutionDir)TestDNNETarget\bin\$(ConfigurationName)\net7.0\TestDNNETargetNE.dll $(TargetDir)&#xD;&#xA;xcopy /y $(SolutionDir)TestDNNETarget\bin\$(ConfigurationName)\net7.0\TestDNNETarget.runtimeconfig.json $(TargetDir)&#xD;&#xA;xcopy /y $(SolutionDir)TestAOTTarget\bin\Release\net7.0\publish\TestAOTTarget.dll $(TargetDir)" />
 	</Target>
 
 </Project>
