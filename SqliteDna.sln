@@ -13,9 +13,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SqliteDna.Integration", "Sq
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestAOT", "TestAOT\TestAOT.csproj", "{8765DE89-B8D0-425A-961B-147D299A71C3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestDNNETarget", "TestDNNETarget\TestDNNETarget.csproj", "{CF29F54D-095E-48BB-9698-719DF5A68E3B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestDNNETarget", "TestDNNETarget\TestDNNETarget.csproj", "{CF29F54D-095E-48BB-9698-719DF5A68E3B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestAOTTarget", "TestAOTTarget\TestAOTTarget.csproj", "{0EBDBCDE-74D3-493A-8C74-8943A6F6AC45}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestAOTTarget", "TestAOTTarget\TestAOTTarget.csproj", "{0EBDBCDE-74D3-493A-8C74-8943A6F6AC45}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestIntergration", "TestIntergration\TestIntergration.csproj", "{3EB3984B-A054-41DF-8729-4F1E19A2318C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,6 +53,10 @@ Global
 		{0EBDBCDE-74D3-493A-8C74-8943A6F6AC45}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0EBDBCDE-74D3-493A-8C74-8943A6F6AC45}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0EBDBCDE-74D3-493A-8C74-8943A6F6AC45}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3EB3984B-A054-41DF-8729-4F1E19A2318C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3EB3984B-A054-41DF-8729-4F1E19A2318C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3EB3984B-A054-41DF-8729-4F1E19A2318C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3EB3984B-A054-41DF-8729-4F1E19A2318C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
