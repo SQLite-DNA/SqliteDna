@@ -1,15 +1,24 @@
-﻿namespace TestDNNETarget
+﻿using SqliteDna.Integration;
+
+namespace TestDNNETarget
 {
     public class MyFunctions
     {
-        public static int Too2()
+        [Function]
+        public static int Foo2()
         {
             return 2;
         }
 
-        public static int Too42()
+        [Function]
+        public static int Foo42()
         {
             return 42;
+        }
+
+        public static int Noo1()
+        {
+            return 1;
         }
     }
 }

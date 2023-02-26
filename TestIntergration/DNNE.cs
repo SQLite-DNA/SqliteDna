@@ -13,13 +13,18 @@ namespace TestIntergration
                 connection.LoadExtension("TestDNNENE.dll");
                 {
                     var command = connection.CreateCommand();
-                    command.CommandText = @"SELECT Too2()";
+                    command.CommandText = @"SELECT Foo2()";
                     Assert.Equal(2, (double)command.ExecuteScalar()!);
                 }
                 {
                     var command = connection.CreateCommand();
-                    command.CommandText = @"SELECT Too42()";
+                    command.CommandText = @"SELECT Foo42()";
                     Assert.Equal(42, (double)command.ExecuteScalar()!);
+                }
+                {
+                    var command = connection.CreateCommand();
+                    command.CommandText = @"SELECT Noo1()";
+                    Assert.Throws<SqliteException>(command.ExecuteScalar);
                 }
             }
         }

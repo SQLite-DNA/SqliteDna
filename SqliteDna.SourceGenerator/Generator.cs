@@ -2,6 +2,7 @@
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace SqliteDna.SourceGenerator
 {
@@ -80,11 +81,15 @@ namespace SqliteDna.SourceGenerator
 
             public void OnVisitSyntaxNode(GeneratorSyntaxContext context)
             {
-                if (context.Node is MethodDeclarationSyntax methodDeclarationSyntax)
+                if (context.Node is MethodDeclarationSyntax methodSyntax)
                 {
-                    Functions.Add((context.SemanticModel.GetDeclaredSymbol(methodDeclarationSyntax) as IMethodSymbol)!);
+                    IMethodSymbol methodSymbol = (context.SemanticModel.GetDeclaredSymbol(methodSyntax) as IMethodSymbol)!;
+                    if (methodSymbol.GetAttributes().Any(a => a.AttributeClass?.ToDisplayString(fullNameFormat) == "SqliteDna.Integration.FunctionAttribute"))
+                        Functions.Add(methodSymbol);
                 }
             }
+
+            private static SymbolDisplayFormat fullNameFormat = new SymbolDisplayFormat(typeQualificationStyle: SymbolDisplayTypeQualificationStyle.NameAndContainingTypesAndNamespaces);
         }
     }
 }
