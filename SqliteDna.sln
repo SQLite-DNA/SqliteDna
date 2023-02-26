@@ -15,6 +15,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestAOT", "TestAOT\TestAOT.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestIntergration", "TestIntergration\TestIntergration.csproj", "{3EB3984B-A054-41DF-8729-4F1E19A2318C}"
 EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "TestShared", "TestShared\TestShared.shproj", "{74CBC733-AFF2-4796-AD48-499AAEB11D7A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,5 +53,10 @@ Global
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {04BACA0B-B7B9-4272-BDE6-8C003250021E}
+	EndGlobalSection
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		TestShared\TestShared.projitems*{0ebdbcde-74d3-493a-8c74-8943a6f6ac45}*SharedItemsImports = 5
+		TestShared\TestShared.projitems*{74cbc733-aff2-4796-ad48-499aaeb11d7a}*SharedItemsImports = 13
+		TestShared\TestShared.projitems*{cf29f54d-095e-48bb-9698-719df5a68e3b}*SharedItemsImports = 5
 	EndGlobalSection
 EndGlobal

@@ -1,6 +1,6 @@
 ﻿using SqliteDna.Integration;
 
-namespace TestDNNETarget
+namespace TestShared
 {
     public class MyFunctions
     {

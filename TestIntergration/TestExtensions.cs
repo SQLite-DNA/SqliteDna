@@ -2,15 +2,17 @@ using Microsoft.Data.Sqlite;
 
 namespace TestIntergration
 {
-    public class DNNE
+    public class TestExtensions
     {
-        [Fact]
-        public void TestFunctions()
+        [Theory]
+        [InlineData("TestDNNENE.dll")]
+        [InlineData("TestAOT.dll")]
+        public void TestFunctions(string extensionFile)
         {
             using (var connection = new SqliteConnection("Data Source=:memory:"))
             {
                 connection.Open();
-                connection.LoadExtension("TestDNNENE.dll");
+                connection.LoadExtension(extensionFile);
                 {
                     var command = connection.CreateCommand();
                     command.CommandText = @"SELECT Foo2()";
