@@ -8,6 +8,9 @@ namespace SqliteDna.Integration
         public const int SQLITE_OK = 0;
         public const int SQLITE_ERROR = 1;
 
+        public static IntPtr SQLITE_STATIC = new IntPtr(0);
+        public static IntPtr SQLITE_TRANSIENT = new IntPtr(-1);
+
         public static unsafe int Init(IntPtr db, byte** pzErrMsg, IntPtr pApi)
         {
             Sqlite.db = db;
@@ -19,7 +22,7 @@ namespace SqliteDna.Integration
         {
             return sqliteApi.create_function_v2(
                 db,
-                StringToSqliteUtf8(name),
+                StringToSqliteUtf8(name, out _),
                 argc,
                 TextEncodings.SQLITE_UTF8,
                 IntPtr.Zero,
@@ -35,12 +38,20 @@ namespace SqliteDna.Integration
             sqliteApi.result_double(context, d);
         }
 
-        private static unsafe byte* StringToSqliteUtf8(string s)
+        public static unsafe void ResultString(IntPtr context, string s)
+        {
+            byte* text = StringToSqliteUtf8(s, out int length);
+            sqliteApi.result_text(context, text, length, SQLITE_TRANSIENT);
+            sqliteApi.free(new IntPtr(text));
+        }
+
+        private static unsafe byte* StringToSqliteUtf8(string s, out int length)
         {
             byte[] bytes = Encoding.UTF8.GetBytes(s);
             var pzString = (byte*)sqliteApi.malloc(bytes.Length + 1);
             Marshal.Copy(bytes, 0, (nint)pzString, bytes.Length);
             pzString[bytes.Length] = 0;
+            length = bytes.Length;
             return pzString;
         }
 

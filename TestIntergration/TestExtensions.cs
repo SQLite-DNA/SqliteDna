@@ -25,6 +25,11 @@ namespace TestIntergration
                 }
                 {
                     var command = connection.CreateCommand();
+                    command.CommandText = @"SELECT FooHello()";
+                    Assert.Equal("Hello", (string)command.ExecuteScalar()!);
+                }
+                {
+                    var command = connection.CreateCommand();
                     command.CommandText = @"SELECT Noo1()";
                     Assert.Throws<SqliteException>(command.ExecuteScalar);
                 }

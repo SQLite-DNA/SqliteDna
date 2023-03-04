@@ -74,7 +74,7 @@ namespace SqliteDna.Integration
         IntPtr p055; //  int  (*exec)(sqlite3*,const char*,sqlite3_callback,void*,char**);
         IntPtr p056; //  int  (*expired)(sqlite3_stmt*);
         IntPtr p057; //  int  (*finalize)(sqlite3_stmt*pStmt);
-        IntPtr p058; //  void  (*free)(void*);
+        public readonly delegate* unmanaged[Cdecl]<IntPtr, void> free; //  void  (*free)(void*);
         IntPtr p059; //  void  (*free_table)(char**result);
         IntPtr p060; //  int  (*get_autocommit)(sqlite3*);
         IntPtr p061; //  void * (*get_auxdata)(sqlite3_context*,int);
@@ -101,7 +101,7 @@ namespace SqliteDna.Integration
         IntPtr p082; //  void  (*result_int)(sqlite3_context*,int);
         IntPtr p083; //  void  (*result_int64)(sqlite3_context*,sqlite_int64);
         IntPtr p084; //  void  (*result_null)(sqlite3_context*);
-        IntPtr p085; //  void  (*result_text)(sqlite3_context*,const char*,int,void(*)(void*));
+        public readonly delegate* unmanaged[Cdecl]<IntPtr, byte*, int, IntPtr, void> result_text; //  void  (*result_text)(sqlite3_context*,const char*,int,void(*)(void*));
         IntPtr p086; //  void  (*result_text16)(sqlite3_context*,const void*,int,void(*)(void*));
         IntPtr p087; //  void  (*result_text16be)(sqlite3_context*,const void*,int,void(*)(void*));
         IntPtr p088; //  void  (*result_text16le)(sqlite3_context*,const void*,int,void(*)(void*));

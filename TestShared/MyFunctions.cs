@@ -16,6 +16,12 @@ namespace TestShared
             return 42;
         }
 
+        [Function]
+        public static string FooHello()
+        {
+            return "Hello";
+        }
+
         public static int Noo1()
         {
             return 1;

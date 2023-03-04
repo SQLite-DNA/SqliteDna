@@ -55,10 +55,11 @@ namespace SqliteDna.SourceGenerator
                     {
                         IntPtr* pValues = (IntPtr*)argv;
 
-                        SqliteDna.Integration.Sqlite.ResultDouble(context, [FULL_FUNCTION_NAME]());
+                        SqliteDna.Integration.Sqlite.Result[RESULT_TYPE](context, [FULL_FUNCTION_NAME]());
                         return SqliteDna.Integration.Sqlite.SQLITE_OK;
                     }
                     """;
+                functionBody = functionBody.Replace("[RESULT_TYPE]", AdaptType(i.ReturnType));
                 functionBody = functionBody.Replace("[FUNCTION_NAME]", i.Name);
                 functionBody = functionBody.Replace("[FULL_FUNCTION_NAME]", $"{i.ContainingType.ContainingNamespace}.{i.ContainingType.Name}.{i.Name}");
                 functions += functionBody;
@@ -73,6 +74,28 @@ namespace SqliteDna.SourceGenerator
         public void Initialize(GeneratorInitializationContext context)
         {
             context.RegisterForSyntaxNotifications(() => new SyntaxReceiver());
+        }
+
+        private static string AdaptType(ITypeSymbol typeSymbol)
+        {
+            switch (typeSymbol.SpecialType)
+            {
+                case SpecialType.System_SByte:
+                case SpecialType.System_Int16:
+                case SpecialType.System_Int32:
+                case SpecialType.System_Int64:
+                case SpecialType.System_Byte:
+                case SpecialType.System_UInt16:
+                case SpecialType.System_UInt32:
+                case SpecialType.System_UInt64:
+                case SpecialType.System_Single:
+                case SpecialType.System_Double:
+                    return "Double";
+                case SpecialType.System_String:
+                    return "String";
+            }
+
+            return typeSymbol.Name;
         }
 
         class SyntaxReceiver : ISyntaxContextReceiver
