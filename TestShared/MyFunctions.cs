@@ -22,6 +22,24 @@ namespace TestShared
             return "Hello";
         }
 
+        [Function]
+        public static int MyIntSum(int a1, int a2)
+        {
+            return a1 + a2;
+        }
+
+        [Function]
+        public static long MyInt64Sum(long a1, long a2)
+        {
+            return a1 + a2;
+        }
+
+        [Function]
+        public static double MyDoubleSum(double a1, double a2)
+        {
+            return a1 + a2;
+        }
+
         public static int Noo1()
         {
             return 1;

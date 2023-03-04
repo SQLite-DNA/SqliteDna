@@ -53,17 +53,29 @@ namespace SqliteDna.SourceGenerator
                     [UnmanagedCallersOnly(CallConvs = new[] { typeof(CallConvCdecl) })]
                     public static unsafe int [FUNCTION_NAME](IntPtr context, int argc, IntPtr argv)
                     {
-                        IntPtr* pValues = (IntPtr*)argv;
+                        IntPtr* values = (IntPtr*)argv;
 
-                        SqliteDna.Integration.Sqlite.Result[RESULT_TYPE](context, [FULL_FUNCTION_NAME]());
+                        SqliteDna.Integration.Sqlite.Result[RESULT_TYPE](context, [FULL_FUNCTION_NAME]([FUNCTION_VALUES]));
                         return SqliteDna.Integration.Sqlite.SQLITE_OK;
                     }
                     """;
+
+                string functionValues = "";
+                int valueIndex = 0;
+                foreach (var p in i.Parameters)
+                {
+                    if (valueIndex > 0)
+                        functionValues += ", ";
+                    functionValues += $"SqliteDna.Integration.Sqlite.Value{AdaptType(p.Type)}(values, {valueIndex})";
+                    ++valueIndex;
+                }
+                functionBody = functionBody.Replace("[FUNCTION_VALUES]", functionValues);
+
                 functionBody = functionBody.Replace("[RESULT_TYPE]", AdaptType(i.ReturnType));
                 functionBody = functionBody.Replace("[FUNCTION_NAME]", i.Name);
                 functionBody = functionBody.Replace("[FULL_FUNCTION_NAME]", $"{i.ContainingType.ContainingNamespace}.{i.ContainingType.Name}.{i.Name}");
                 functions += functionBody;
-                createFunctions += $"            SqliteDna.Integration.Sqlite.CreateFunction(\"{i.Name}\", 0, &Functions.{i.Name});\r\n";
+                createFunctions += $"            SqliteDna.Integration.Sqlite.CreateFunction(\"{i.Name}\", {i.Parameters.Length}, &Functions.{i.Name});\r\n";
             }
             source = source.Replace("[FUNCTIONS]", functions);
             source = source.Replace("[CREATE_FUNCTIONS]", createFunctions);
@@ -83,11 +95,13 @@ namespace SqliteDna.SourceGenerator
                 case SpecialType.System_SByte:
                 case SpecialType.System_Int16:
                 case SpecialType.System_Int32:
-                case SpecialType.System_Int64:
                 case SpecialType.System_Byte:
                 case SpecialType.System_UInt16:
                 case SpecialType.System_UInt32:
+                    return "Int";
+                case SpecialType.System_Int64:
                 case SpecialType.System_UInt64:
+                    return "Int64";
                 case SpecialType.System_Single:
                 case SpecialType.System_Double:
                     return "Double";

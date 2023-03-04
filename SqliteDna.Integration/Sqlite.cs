@@ -33,6 +33,31 @@ namespace SqliteDna.Integration
                 );
         }
 
+        public static unsafe int ValueInt(IntPtr* values, int i)
+        {
+            return sqliteApi.value_int(values[i]);
+        }
+
+        public static unsafe long ValueInt64(IntPtr* values, int i)
+        {
+            return sqliteApi.value_int64(values[i]);
+        }
+
+        public static unsafe double ValueDouble(IntPtr* values, int i)
+        {
+            return sqliteApi.value_double(values[i]);
+        }
+
+        public static unsafe void ResultInt(IntPtr context, int i)
+        {
+            sqliteApi.result_int(context, i);
+        }
+
+        public static unsafe void ResultInt64(IntPtr context, long i)
+        {
+            sqliteApi.result_int64(context, i);
+        }
+
         public static unsafe void ResultDouble(IntPtr context, double d)
         {
             sqliteApi.result_double(context, d);
