@@ -40,6 +40,12 @@ namespace TestShared
             return a1 + a2;
         }
 
+        [Function]
+        public static string MyConcat(string s1, string s2)
+        {
+            return s1 + " " + s2;
+        }
+
         public static int Noo1()
         {
             return 1;

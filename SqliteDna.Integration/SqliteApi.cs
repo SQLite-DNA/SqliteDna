@@ -128,7 +128,7 @@ namespace SqliteDna.Integration
         public readonly delegate* unmanaged[Cdecl]<IntPtr, int> value_int; //  int  (*value_int)(sqlite3_value*);
         public readonly delegate* unmanaged[Cdecl]<IntPtr, long> value_int64; //  sqlite_int64  (*value_int64)(sqlite3_value*);
         IntPtr p108; //  int  (*value_numeric_type)(sqlite3_value*);
-        IntPtr p109; //  const unsigned char * (*value_text)(sqlite3_value*);
+        public readonly delegate* unmanaged[Cdecl]<IntPtr, byte*> value_text; //  const unsigned char * (*value_text)(sqlite3_value*);
         IntPtr p110; //  const void * (*value_text16)(sqlite3_value*);
         IntPtr p111; //  const void * (*value_text16be)(sqlite3_value*);
         IntPtr p112; //  const void * (*value_text16le)(sqlite3_value*);

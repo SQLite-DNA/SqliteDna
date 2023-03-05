@@ -40,6 +40,11 @@ namespace TestIntergration
                 }
                 {
                     var command = connection.CreateCommand();
+                    command.CommandText = @"SELECT MyConcat('Hello', 'world')";
+                    Assert.Equal("Hello world", (string)command.ExecuteScalar()!);
+                }
+                {
+                    var command = connection.CreateCommand();
                     command.CommandText = @"SELECT Noo1()";
                     Assert.Throws<SqliteException>(command.ExecuteScalar);
                 }

@@ -48,6 +48,21 @@ namespace SqliteDna.Integration
             return sqliteApi.value_double(values[i]);
         }
 
+        public static unsafe string ValueString(IntPtr* values, int i)
+        {
+            byte* text = sqliteApi.value_text(values[i]);
+            if (text == null)
+                return "";
+
+            int length = 0;
+            while (text[length] != 0)
+            {
+                ++length;
+            }
+
+            return Encoding.UTF8.GetString(text, length);
+        }
+
         public static unsafe void ResultInt(IntPtr context, int i)
         {
             sqliteApi.result_int(context, i);
