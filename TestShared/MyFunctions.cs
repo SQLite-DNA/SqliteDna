@@ -46,9 +46,28 @@ namespace TestShared
             return s1 + " " + s2;
         }
 
+        [Function]
+        public static void Nop()
+        {
+        }
+
+        [Function]
+        public static void IncrementInternalCounter()
+        {
+            ++internalCounter;
+        }
+
+        [Function]
+        public static int GetInternalCounter()
+        {
+            return internalCounter;
+        }
+
         public static int Noo1()
         {
             return 1;
         }
+
+        private static int internalCounter;
     }
 }

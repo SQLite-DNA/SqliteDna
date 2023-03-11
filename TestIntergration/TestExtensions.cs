@@ -45,6 +45,20 @@ namespace TestIntergration
                 }
                 {
                     var command = connection.CreateCommand();
+                    command.CommandText = @"SELECT Nop()";
+                    Assert.Equal(-1, command.ExecuteNonQuery());
+                }
+                {
+                    var command1 = connection.CreateCommand();
+                    command1.CommandText = @"SELECT IncrementInternalCounter()";
+                    Assert.Equal(-1, command1.ExecuteNonQuery());
+
+                    var command2 = connection.CreateCommand();
+                    command2.CommandText = @"SELECT GetInternalCounter()";
+                    Assert.Equal(1, (long)command2.ExecuteScalar()!);
+                }
+                {
+                    var command = connection.CreateCommand();
                     command.CommandText = @"SELECT Noo1()";
                     Assert.Throws<SqliteException>(command.ExecuteScalar);
                 }

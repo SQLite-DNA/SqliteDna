@@ -55,7 +55,8 @@ namespace SqliteDna.SourceGenerator
                     {
                         IntPtr* values = (IntPtr*)argv;
 
-                        SqliteDna.Integration.Sqlite.Result[RESULT_TYPE](context, [FULL_FUNCTION_NAME]([FUNCTION_VALUES]));
+                        [FUNCTION_CALL_AND_RESULT]
+                        
                         return SqliteDna.Integration.Sqlite.SQLITE_OK;
                     }
                     """;
@@ -69,9 +70,20 @@ namespace SqliteDna.SourceGenerator
                     functionValues += $"SqliteDna.Integration.Sqlite.Value{AdaptType(p.Type)}(values, {valueIndex})";
                     ++valueIndex;
                 }
-                functionBody = functionBody.Replace("[FUNCTION_VALUES]", functionValues);
 
-                functionBody = functionBody.Replace("[RESULT_TYPE]", AdaptType(i.ReturnType));
+                if (i.ReturnsVoid)
+                {
+                    string result = "[FULL_FUNCTION_NAME]([FUNCTION_VALUES]);";
+                    functionBody = functionBody.Replace("[FUNCTION_CALL_AND_RESULT]", result);
+                }
+                else
+                {
+                    string result = "SqliteDna.Integration.Sqlite.Result[RESULT_TYPE](context, [FULL_FUNCTION_NAME]([FUNCTION_VALUES]));";
+                    result = result.Replace("[RESULT_TYPE]", AdaptType(i.ReturnType));
+                    functionBody = functionBody.Replace("[FUNCTION_CALL_AND_RESULT]", result);
+                }
+
+                functionBody = functionBody.Replace("[FUNCTION_VALUES]", functionValues);
                 functionBody = functionBody.Replace("[FUNCTION_NAME]", i.Name);
                 functionBody = functionBody.Replace("[FULL_FUNCTION_NAME]", $"{i.ContainingType.ContainingNamespace}.{i.ContainingType.Name}.{i.Name}");
                 functions += functionBody;
