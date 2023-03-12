@@ -1,4 +1,5 @@
-﻿using System.Runtime.InteropServices;
+﻿using System.Globalization;
+using System.Runtime.InteropServices;
 using System.Text;
 
 namespace SqliteDna.Integration
@@ -48,6 +49,11 @@ namespace SqliteDna.Integration
             return sqliteApi.value_double(values[i]);
         }
 
+        public static unsafe DateTime ValueDateTime(IntPtr* values, int i)
+        {
+            return DateTime.Parse(ValueString(values, i)!, CultureInfo.InvariantCulture);
+        }
+
         public static unsafe string? ValueString(IntPtr* values, int i)
         {
             byte* text = sqliteApi.value_text(values[i]);
@@ -89,6 +95,11 @@ namespace SqliteDna.Integration
             byte* text = StringToSqliteUtf8(s, out int length);
             sqliteApi.result_text(context, text, length, SQLITE_TRANSIENT);
             sqliteApi.free(new IntPtr(text));
+        }
+
+        public static unsafe void ResultDateTime(IntPtr context, DateTime dt)
+        {
+            ResultString(context, dt.ToString("yyyy-MM-dd HH:mm:ss.FFF", CultureInfo.InvariantCulture));
         }
 
         private static unsafe byte* StringToSqliteUtf8(string s, out int length)

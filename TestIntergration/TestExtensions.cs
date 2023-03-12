@@ -97,5 +97,27 @@ namespace TestIntergration
                 Assert.Equal(223372036854775809, (long)command.ExecuteScalar()!);
             }
         }
+
+        [Theory]
+        [InlineData("TestDNNENE.dll")]
+        [InlineData("TestAOT.dll")]
+        public void ChinookDB(string extensionFile)
+        {
+            using (var connection = new SqliteConnection("Data Source=chinook.db"))
+            {
+                connection.Open();
+                connection.LoadExtension(extensionFile);
+
+                {
+                    var command1 = connection.CreateCommand();
+                    command1.CommandText = @"SELECT InvoiceDate FROM invoices WHERE InvoiceId = 27";
+                    Assert.Equal("2009-04-22 00:00:00", (string)command1.ExecuteScalar()!);
+
+                    var command2 = connection.CreateCommand();
+                    command2.CommandText = @"SELECT DateTimeNop(InvoiceDate) FROM invoices WHERE InvoiceId = 27";
+                    Assert.Equal("2009-04-22 00:00:00", (string)command2.ExecuteScalar()!);
+                }
+            }
+        }
     }
 }

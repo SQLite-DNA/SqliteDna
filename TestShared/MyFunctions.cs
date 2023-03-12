@@ -78,6 +78,12 @@ namespace TestShared
             return internalCounter;
         }
 
+        [Function]
+        public static DateTime DateTimeNop(DateTime dt)
+        {
+            return dt;
+        }
+
         public static int Noo1()
         {
             return 1;
