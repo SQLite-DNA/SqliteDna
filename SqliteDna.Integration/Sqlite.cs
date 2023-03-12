@@ -48,11 +48,11 @@ namespace SqliteDna.Integration
             return sqliteApi.value_double(values[i]);
         }
 
-        public static unsafe string ValueString(IntPtr* values, int i)
+        public static unsafe string? ValueString(IntPtr* values, int i)
         {
             byte* text = sqliteApi.value_text(values[i]);
             if (text == null)
-                return "";
+                return null;
 
             int length = 0;
             while (text[length] != 0)
@@ -78,8 +78,14 @@ namespace SqliteDna.Integration
             sqliteApi.result_double(context, d);
         }
 
-        public static unsafe void ResultString(IntPtr context, string s)
+        public static unsafe void ResultString(IntPtr context, string? s)
         {
+            if (s == null)
+            {
+                sqliteApi.result_null(context);
+                return;
+            }
+
             byte* text = StringToSqliteUtf8(s, out int length);
             sqliteApi.result_text(context, text, length, SQLITE_TRANSIENT);
             sqliteApi.free(new IntPtr(text));

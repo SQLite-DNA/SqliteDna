@@ -47,6 +47,21 @@ namespace TestShared
         }
 
         [Function]
+        public static string? MyNullableConcat(string? s1, string? s2)
+        {
+            if (s1 == null && s2 == null)
+                return null;
+
+            if (s1 == null)
+                return s2;
+
+            if (s2 == null)
+                return s1;
+
+            return s1 + " " + s2;
+        }
+
+        [Function]
         public static void Nop()
         {
         }

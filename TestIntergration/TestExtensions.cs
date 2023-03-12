@@ -58,6 +58,23 @@ namespace TestIntergration
                     Assert.Equal(1, (long)command2.ExecuteScalar()!);
                 }
                 {
+                    var command1 = connection.CreateCommand();
+                    command1.CommandText = @"SELECT MyNullableConcat('Hello', 'world')";
+                    Assert.Equal("Hello world", (string)command1.ExecuteScalar()!);
+
+                    var command2 = connection.CreateCommand();
+                    command2.CommandText = @"SELECT MyNullableConcat(NULL, NULL)";
+                    Assert.True(command2.ExecuteScalar() is DBNull);
+
+                    var command3 = connection.CreateCommand();
+                    command3.CommandText = @"SELECT MyNullableConcat('Hello', NULL)";
+                    Assert.Equal("Hello", (string)command3.ExecuteScalar()!);
+
+                    var command4 = connection.CreateCommand();
+                    command4.CommandText = @"SELECT MyNullableConcat(NULL, 'world')";
+                    Assert.Equal("world", (string)command4.ExecuteScalar()!);
+                }
+                {
                     var command = connection.CreateCommand();
                     command.CommandText = @"SELECT Noo1()";
                     Assert.Throws<SqliteException>(command.ExecuteScalar);
