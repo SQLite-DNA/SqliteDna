@@ -119,5 +119,27 @@ namespace TestIntergration
                 }
             }
         }
+
+        [Theory]
+        [InlineData("TestDNNENE.dll")]
+        [InlineData("TestAOT.dll")]
+        public void NorthwindDB(string extensionFile)
+        {
+            using (var connection = new SqliteConnection("Data Source=northwind.db"))
+            {
+                connection.Open();
+                connection.LoadExtension(extensionFile);
+
+                {
+                    var command1 = connection.CreateCommand();
+                    command1.CommandText = @"SELECT HireDate FROM Employees WHERE EmployeeId = 9";
+                    Assert.Equal("2014-11-15", (string)command1.ExecuteScalar()!);
+
+                    var command2 = connection.CreateCommand();
+                    command2.CommandText = @"SELECT DateTimeNop(HireDate) FROM Employees WHERE EmployeeId = 9";
+                    Assert.Equal("2014-11-15 00:00:00", (string)command2.ExecuteScalar()!);
+                }
+            }
+        }
     }
 }
