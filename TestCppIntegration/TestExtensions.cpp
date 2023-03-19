@@ -19,6 +19,26 @@ namespace TestCppIntegration
 			Functions("TestDNNENE.dll");
 		}
 
+		TEST_METHOD(ChinookDBAOT)
+		{
+			ChinookDB("TestAOT.dll");
+		}
+
+		TEST_METHOD(ChinookDBDNNE)
+		{
+			ChinookDB("TestDNNENE.dll");
+		}
+
+		TEST_METHOD(NorthwindDBAOT)
+		{
+			NorthwindDB("TestAOT.dll");
+		}
+
+		TEST_METHOD(NorthwindDBDNNE)
+		{
+			NorthwindDB("TestDNNENE.dll");
+		}
+
 	private:
 
 		void Functions(const std::string& extensionFile)
@@ -89,6 +109,38 @@ namespace TestCppIntegration
 			}
 			{
 				Assert::ExpectException<SQLite::Exception>([&]() { db.exec("SELECT Noo1()"); });
+			}
+		}
+
+		void ChinookDB(const std::string& extensionFile)
+		{
+			SQLite::Database db("chinook.db");
+			db.loadExtension(extensionFile.c_str(), nullptr);
+
+			{
+				SQLite::Statement query1(db, "SELECT InvoiceDate FROM invoices WHERE InvoiceId = 27");
+				query1.executeStep();
+				Assert::AreEqual(std::string("2009-04-22 00:00:00"), query1.getColumn(0).getString());
+
+				SQLite::Statement query2(db, "SELECT DateTimeNop(InvoiceDate) FROM invoices WHERE InvoiceId = 27");
+				query2.executeStep();
+				Assert::AreEqual(std::string("2009-04-22 00:00:00"), query2.getColumn(0).getString());
+			}
+		}
+
+		void NorthwindDB(const std::string& extensionFile)
+		{
+			SQLite::Database db("northwind.db");
+			db.loadExtension(extensionFile.c_str(), nullptr);
+
+			{
+				SQLite::Statement query1(db, "SELECT HireDate FROM Employees WHERE EmployeeId = 9");
+				query1.executeStep();
+				Assert::AreEqual(std::string("2014-11-15"), query1.getColumn(0).getString());
+
+				SQLite::Statement query2(db, "SELECT DateTimeNop(HireDate) FROM Employees WHERE EmployeeId = 9");
+				query2.executeStep();
+				Assert::AreEqual(std::string("2014-11-15 00:00:00"), query2.getColumn(0).getString());
 			}
 		}
 	};
