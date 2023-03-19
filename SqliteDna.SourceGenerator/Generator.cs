@@ -104,17 +104,10 @@ namespace SqliteDna.SourceGenerator
         {
             switch (typeSymbol.SpecialType)
             {
-                case SpecialType.System_SByte:
-                case SpecialType.System_Int16:
                 case SpecialType.System_Int32:
-                case SpecialType.System_Byte:
-                case SpecialType.System_UInt16:
-                case SpecialType.System_UInt32:
                     return "Int";
                 case SpecialType.System_Int64:
-                case SpecialType.System_UInt64:
                     return "Int64";
-                case SpecialType.System_Single:
                 case SpecialType.System_Double:
                     return "Double";
                 case SpecialType.System_String:
