@@ -114,6 +114,12 @@ namespace SqliteDna.SourceGenerator
                     return "String";
             }
 
+            if (typeSymbol is IArrayTypeSymbol arrayTypeSymbol)
+            {
+                if (arrayTypeSymbol.ElementType.SpecialType == SpecialType.System_Byte)
+                    return "Blob";
+            }
+
             return typeSymbol.Name;
         }
 

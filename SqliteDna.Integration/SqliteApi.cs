@@ -94,7 +94,7 @@ namespace SqliteDna.Integration
         IntPtr p075; //  void  (*progress_handler)(sqlite3*,int,int(*)(void*),void*);
         IntPtr p076; //  void *(*realloc)(void*,int);
         IntPtr p077; //  int  (*reset)(sqlite3_stmt*pStmt);
-        IntPtr p078; //  void  (*result_blob)(sqlite3_context*,const void*,int,void(*)(void*));
+        public readonly delegate* unmanaged[Cdecl]<IntPtr, byte*, int, IntPtr, void> result_blob; //  void  (*result_blob)(sqlite3_context*,const void*,int,void(*)(void*));
         public readonly delegate* unmanaged[Cdecl]<IntPtr, double, void> result_double; //  void  (*result_double)(sqlite3_context*,double);
         IntPtr p080; //  void  (*result_error)(sqlite3_context*,const char*,int);
         IntPtr p081; //  void  (*result_error16)(sqlite3_context*,const void*,int);
@@ -121,8 +121,8 @@ namespace SqliteDna.Integration
         IntPtr p100; //  void * (*update_hook)(sqlite3*,void(*)(void*,int ,char const*,char const*,
                      //                                         sqlite_int64),void*);
         IntPtr p101; //  void * (*user_data)(sqlite3_context*);
-        IntPtr p102; //  const void * (*value_blob)(sqlite3_value*);
-        IntPtr p103; //  int  (*value_bytes)(sqlite3_value*);
+        public readonly delegate* unmanaged[Cdecl]<IntPtr, byte*> value_blob; //  const void * (*value_blob)(sqlite3_value*);
+        public readonly delegate* unmanaged[Cdecl]<IntPtr, int> value_bytes; //  int  (*value_bytes)(sqlite3_value*);
         IntPtr p104; //  int  (*value_bytes16)(sqlite3_value*);
         public readonly delegate* unmanaged[Cdecl]<IntPtr, double> value_double; //  double  (*value_double)(sqlite3_value*);
         public readonly delegate* unmanaged[Cdecl]<IntPtr, int> value_int; //  int  (*value_int)(sqlite3_value*);

@@ -84,6 +84,14 @@ namespace TestShared
             return dt;
         }
 
+        [Function]
+        public static byte[] ShiftBlob(byte[] bytes)
+        {
+            for (int i = 0; i < bytes.Length; ++i)
+                bytes[i] = (byte)(bytes[i] + 1);
+            return bytes;
+        }
+
         public static int Noo1()
         {
             return 1;

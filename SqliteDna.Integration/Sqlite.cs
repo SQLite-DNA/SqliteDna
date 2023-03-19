@@ -69,6 +69,14 @@ namespace SqliteDna.Integration
             return Encoding.UTF8.GetString(text, length);
         }
 
+        public static unsafe byte[] ValueBlob(IntPtr* values, int i)
+        {
+            byte[] result = new byte[sqliteApi.value_bytes(values[i])];
+            byte* pBytes = sqliteApi.value_blob(values[i]);
+            Marshal.Copy(new IntPtr(pBytes), result, 0, result.Length);
+            return result;
+        }
+
         public static unsafe void ResultInt(IntPtr context, int i)
         {
             sqliteApi.result_int(context, i);
@@ -100,6 +108,16 @@ namespace SqliteDna.Integration
         public static unsafe void ResultDateTime(IntPtr context, DateTime dt)
         {
             ResultString(context, dt.ToString("yyyy-MM-dd HH:mm:ss.FFF", CultureInfo.InvariantCulture));
+        }
+
+        public static unsafe void ResultBlob(IntPtr context, byte[] bytes)
+        {
+            var pBytes = (byte*)sqliteApi.malloc(bytes.Length);
+            Marshal.Copy(bytes, 0, (nint)pBytes, bytes.Length);
+
+            sqliteApi.result_blob(context, pBytes, bytes.Length, SQLITE_TRANSIENT);
+
+            sqliteApi.free(new IntPtr(pBytes));
         }
 
         private static unsafe byte* StringToSqliteUtf8(string s, out int length)

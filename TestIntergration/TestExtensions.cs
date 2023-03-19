@@ -128,6 +128,26 @@ namespace TestIntergration
                     command2.CommandText = @"SELECT DateTimeNop(HireDate) FROM Employees WHERE EmployeeId = 9";
                     Assert.Equal("2014-11-15 00:00:00", (string)command2.ExecuteScalar()!);
                 }
+
+                {
+                    var command1 = connection.CreateCommand();
+                    command1.CommandText = @"SELECT Picture FROM Categories WHERE CategoryID = 1";
+                    byte[] bytes1 = (byte[])command1.ExecuteScalar()!;
+                    Assert.Equal(10151, bytes1.Length);
+                    Assert.Equal(255, bytes1[0]);
+                    Assert.Equal(216, bytes1[1]);
+                    Assert.Equal(217, bytes1[10149]);
+                    Assert.Equal(0, bytes1[10150]);
+
+                    var command2 = connection.CreateCommand();
+                    command2.CommandText = @"SELECT ShiftBlob(Picture) FROM Categories WHERE CategoryID = 1";
+                    byte[] bytes2 = (byte[])command2.ExecuteScalar()!;
+                    Assert.Equal(10151, bytes2.Length);
+                    Assert.Equal(0, bytes2[0]);
+                    Assert.Equal(217, bytes2[1]);
+                    Assert.Equal(218, bytes2[10149]);
+                    Assert.Equal(1, bytes2[10150]);
+                }
             }
         }
     }
