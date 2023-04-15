@@ -120,6 +120,13 @@ namespace SqliteDna.Integration
             sqliteApi.free(new IntPtr(pBytes));
         }
 
+        public static unsafe void ResultError(IntPtr context, string s)
+        {
+            byte* text = StringToSqliteUtf8(s, out int length);
+            sqliteApi.result_error(context, text, length);
+            sqliteApi.free(new IntPtr(text));
+        }
+
         private static unsafe byte* StringToSqliteUtf8(string s, out int length)
         {
             byte[] bytes = Encoding.UTF8.GetBytes(s);

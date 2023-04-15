@@ -108,6 +108,9 @@ namespace TestCppIntegration
 				Assert::AreEqual(std::string("world"), query4.getColumn(0).getString());
 			}
 			{
+				Assert::ExpectException<SQLite::Exception>([&]() { db.exec("SELECT MyError()"); });
+			}
+			{
 				Assert::ExpectException<SQLite::Exception>([&]() { db.exec("SELECT Noo1()"); });
 			}
 		}

@@ -55,7 +55,14 @@ namespace SqliteDna.SourceGenerator
                     {
                         IntPtr* values = (IntPtr*)argv;
 
+                        try
+                        {
                         [FUNCTION_CALL_AND_RESULT]
+                        }
+                        catch(Exception e)
+                        {
+                            SqliteDna.Integration.Sqlite.ResultError(context, e.Message);
+                        }
                         
                         return SqliteDna.Integration.Sqlite.SQLITE_OK;
                     }

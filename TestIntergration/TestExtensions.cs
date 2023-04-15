@@ -81,6 +81,11 @@ namespace TestIntergration
                 }
                 {
                     var command = connection.CreateCommand();
+                    command.CommandText = @"SELECT MyError()";
+                    Assert.Throws<SqliteException>(command.ExecuteScalar);
+                }
+                {
+                    var command = connection.CreateCommand();
                     command.CommandText = @"SELECT Noo1()";
                     Assert.Throws<SqliteException>(command.ExecuteScalar);
                 }

@@ -96,7 +96,7 @@ namespace SqliteDna.Integration
         IntPtr p077; //  int  (*reset)(sqlite3_stmt*pStmt);
         public readonly delegate* unmanaged[Cdecl]<IntPtr, byte*, int, IntPtr, void> result_blob; //  void  (*result_blob)(sqlite3_context*,const void*,int,void(*)(void*));
         public readonly delegate* unmanaged[Cdecl]<IntPtr, double, void> result_double; //  void  (*result_double)(sqlite3_context*,double);
-        IntPtr p080; //  void  (*result_error)(sqlite3_context*,const char*,int);
+        public readonly delegate* unmanaged[Cdecl]<IntPtr, byte*, int, void> result_error; //  void  (*result_error)(sqlite3_context*,const char*,int);
         IntPtr p081; //  void  (*result_error16)(sqlite3_context*,const void*,int);
         public readonly delegate* unmanaged[Cdecl]<IntPtr, int, void> result_int; //  void  (*result_int)(sqlite3_context*,int);
         public readonly delegate* unmanaged[Cdecl]<IntPtr, long, void> result_int64; //  void  (*result_int64)(sqlite3_context*,sqlite_int64);

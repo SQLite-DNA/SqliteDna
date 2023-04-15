@@ -92,6 +92,12 @@ namespace TestShared
             return bytes;
         }
 
+        [Function]
+        public static void MyError()
+        {
+            throw new Exception("My error message");
+        }
+
         public static int Noo1()
         {
             return 1;
