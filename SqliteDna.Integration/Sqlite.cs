@@ -60,13 +60,7 @@ namespace SqliteDna.Integration
             if (text == null)
                 return null;
 
-            int length = 0;
-            while (text[length] != 0)
-            {
-                ++length;
-            }
-
-            return Encoding.UTF8.GetString(text, length);
+            return Encoding.UTF8.GetString(text, sqliteApi.value_bytes(values[i]));
         }
 
         public static unsafe byte[] ValueBlob(IntPtr* values, int i)
