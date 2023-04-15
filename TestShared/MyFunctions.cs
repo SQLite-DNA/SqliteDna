@@ -89,6 +89,13 @@ namespace TestShared
         {
             for (int i = 0; i < bytes.Length; ++i)
                 bytes[i] = (byte)(bytes[i] + 1);
+
+            return bytes;
+        }
+
+        [Function]
+        public static byte[]? NullableBlob(byte[]? bytes)
+        {
             return bytes;
         }
 

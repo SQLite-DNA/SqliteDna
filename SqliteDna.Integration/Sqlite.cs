@@ -63,10 +63,13 @@ namespace SqliteDna.Integration
             return Encoding.UTF8.GetString(text, sqliteApi.value_bytes(values[i]));
         }
 
-        public static unsafe byte[] ValueBlob(IntPtr* values, int i)
+        public static unsafe byte[]? ValueBlob(IntPtr* values, int i)
         {
-            byte[] result = new byte[sqliteApi.value_bytes(values[i])];
             byte* pBytes = sqliteApi.value_blob(values[i]);
+            if (pBytes == null)
+                return null;
+
+            byte[] result = new byte[sqliteApi.value_bytes(values[i])];
             Marshal.Copy(new IntPtr(pBytes), result, 0, result.Length);
             return result;
         }
@@ -104,8 +107,14 @@ namespace SqliteDna.Integration
             ResultString(context, dt.ToString("yyyy-MM-dd HH:mm:ss.FFF", CultureInfo.InvariantCulture));
         }
 
-        public static unsafe void ResultBlob(IntPtr context, byte[] bytes)
+        public static unsafe void ResultBlob(IntPtr context, byte[]? bytes)
         {
+            if (bytes == null)
+            {
+                sqliteApi.result_null(context);
+                return;
+            }
+
             var pBytes = (byte*)sqliteApi.malloc(bytes.Length);
             Marshal.Copy(bytes, 0, (nint)pBytes, bytes.Length);
 

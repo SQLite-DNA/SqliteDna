@@ -153,6 +153,18 @@ namespace TestIntergration
                     Assert.Equal(218, bytes2[10149]);
                     Assert.Equal(1, bytes2[10150]);
                 }
+
+                {
+                    var command1 = connection.CreateCommand();
+                    command1.CommandText = @"SELECT NullableBlob(Picture) FROM Categories WHERE CategoryID = 1";
+                    byte[] bytes1 = (byte[])command1.ExecuteScalar()!;
+                    Assert.Equal(10151, bytes1.Length);
+                    Assert.Equal(255, bytes1[0]);
+
+                    var command2 = connection.CreateCommand();
+                    command2.CommandText = @"SELECT NullableBlob(NULL)";
+                    Assert.True(command2.ExecuteScalar() is DBNull);
+                }
             }
         }
     }
