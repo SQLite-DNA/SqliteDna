@@ -145,6 +145,38 @@ namespace TestCppIntegration
 				query2.executeStep();
 				Assert::AreEqual(std::string("2014-11-15 00:00:00"), query2.getColumn(0).getString());
 			}
+
+			{
+				SQLite::Statement query1(db, "SELECT Picture FROM Categories WHERE CategoryID = 1");
+				query1.executeStep();
+				Assert::AreEqual(10151, query1.getColumn(0).getBytes());
+				const unsigned char* blob1 = static_cast<const unsigned char*>(query1.getColumn(0).getBlob());
+				Assert::AreEqual<unsigned char>(255, blob1[0]);
+				Assert::AreEqual<unsigned char>(216, blob1[1]);
+				Assert::AreEqual<unsigned char>(217, blob1[10149]);
+				Assert::AreEqual<unsigned char>(0, blob1[10150]);
+
+				SQLite::Statement query2(db, "SELECT ShiftBlob(Picture) FROM Categories WHERE CategoryID = 1");
+				query2.executeStep();
+				Assert::AreEqual(10151, query2.getColumn(0).getBytes());
+				const unsigned char* blob2 = static_cast<const unsigned char*>(query2.getColumn(0).getBlob());
+				Assert::AreEqual<unsigned char>(0, blob2[0]);
+				Assert::AreEqual<unsigned char>(217, blob2[1]);
+				Assert::AreEqual<unsigned char>(218, blob2[10149]);
+				Assert::AreEqual<unsigned char>(1, blob2[10150]);
+			}
+
+			{
+				SQLite::Statement query1(db, "SELECT NullableBlob(Picture) FROM Categories WHERE CategoryID = 1");
+				query1.executeStep();
+				Assert::AreEqual(10151, query1.getColumn(0).getBytes());
+				const unsigned char* blob1 = static_cast<const unsigned char*>(query1.getColumn(0).getBlob());
+				Assert::AreEqual<unsigned char>(255, blob1[0]);
+
+				SQLite::Statement query2(db, "SELECT NullableBlob(NULL)");
+				query2.executeStep();
+				Assert::IsTrue(query2.getColumn(0).isNull());
+			}
 		}
 	};
 }

@@ -57,7 +57,7 @@ namespace SqliteDna.SourceGenerator
 
                         try
                         {
-                        [FUNCTION_CALL_AND_RESULT]
+                            [FUNCTION_CALL_AND_RESULT]
                         }
                         catch(Exception e)
                         {
