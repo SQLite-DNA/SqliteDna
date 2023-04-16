@@ -1,12 +1,89 @@
 # Sqlite-DNA
 
-Sqlite-DNA support writing SQLite extensions with .NET.
+Sqlite-DNA supports writing [SQLite extensions](https://www.sqlite.org/loadext.html) with C# and .NET 7.
 
-We use the DNNE library to create a native library exporting the .NET functions.
+We use the [DNNE library](https://github.com/AaronRobinsonMSFT/DNNE), [AOT](https://learn.microsoft.com/en-us/dotnet/core/deploying/native-aot/) and [Source Generators](https://learn.microsoft.com/en-us/dotnet/csharp/roslyn-sdk/source-generators-overview) to create a native library exporting the .NET functions.
 
-### Status
+### Getting started
 
-This is an early experiment. If you're interested in the project, let me know.
+Create a C# class library .NET 7 project and reference the SqliteDna package (or use Samples\Minimal\Minimal.csproj):
+
+```xml
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net7.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="SqliteDna" Version="*-*" />
+	</ItemGroup>
+
+</Project>
+```
+
+Write your custom function and mark it with the [Function] attribute:
+
+```csharp
+using SqliteDna.Integration;
+
+namespace Minimal
+{
+    public class MyFunctions
+    {
+        [Function]
+        public static int Foo2()
+        {
+            return 2;
+        }
+
+        [Function]
+        public static int Foo42()
+        {
+            return 42;
+        }
+    }
+}
+```
+
+Build the project. SqliteDna will use DNNE mode and produce 4 files comprising your extension: [ProjectName]NE.dll (native wrapper), [ProjectName].dll (main .NET dll), [ProjectName].runtimeconfig.json, SqliteDna.Integration.dll.
+
+You can now load the extension in SQLite and call the functions:
+
+![](Doc/minimal-extension.png)
+
+To use the AOT mode, add PublishAOT and RuntimeIdentifier properties to the project (or use Samples\MinimalAOT\MinimalAOT.csproj):
+
+```xml
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net7.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+
+		<PublishAOT>true</PublishAOT>
+		<RuntimeIdentifier>win-x64</RuntimeIdentifier>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="SqliteDna" Version="*-*" />
+	</ItemGroup>
+
+</Project>
+```
+
+Publishing the AOT project will produce the single [ProjectName].dll native extension that you can load in SQLite:
+
+![](Doc/minimal-aot-extension.png)
+
+### Features
+
+You can use int, long, double, string, string?, DateTime, byte[], byte[]? types for your function parameters and return value. They will be automatically converted to corresponding SQLite types.
+
+You can throw an exception from your function and it will be converted to an SQLite error.
 
 ### Related projects
 
