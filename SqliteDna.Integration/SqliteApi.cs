@@ -63,10 +63,10 @@ namespace SqliteDna.Integration
                      //                            void (*xFunc)(sqlite3_context*,int,sqlite3_value**),
                      //                            void (*xStep)(sqlite3_context*,int,sqlite3_value**),
                      //                            void (*xFinal)(sqlite3_context*));
-        IntPtr p047; //  int (*create_module)(sqlite3*,const char*,const sqlite3_module*,void*);
+        public readonly delegate* unmanaged[Cdecl]<IntPtr, byte*, ref sqlite3_module, IntPtr, int> create_module; //  int (*create_module)(sqlite3*,const char*,const sqlite3_module*,void*);
         IntPtr p048; //  int  (*data_count)(sqlite3_stmt*pStmt);
         IntPtr p049; //  sqlite3 * (*db_handle)(sqlite3_stmt*);
-        IntPtr p050; //  int (*declare_vtab)(sqlite3*,const char*);
+        public readonly delegate* unmanaged[Cdecl]<IntPtr, byte*, int> declare_vtab; //  int (*declare_vtab)(sqlite3*,const char*);
         IntPtr p051; //  int  (*enable_shared_cache)(int);
         IntPtr p052; //  int  (*errcode)(sqlite3*db);
         IntPtr p053; //  const char * (*errmsg)(sqlite3*);
@@ -314,6 +314,62 @@ namespace SqliteDna.Integration
         IntPtr p251; //  sqlite3_file *(*database_file_object)(const char*);
         /* Version 3.34.0 and later */
         IntPtr p252; //  int (*txn_state)(sqlite3*,const char*);
+    };
+
+    [StructLayout(LayoutKind.Sequential)]
+    internal unsafe struct sqlite3_module
+    {
+        int version; //int iVersion;
+        public delegate* unmanaged[Cdecl]<IntPtr, IntPtr, int, IntPtr, IntPtr*, IntPtr, int> xCreate; //int (* xCreate) (sqlite3*, void* pAux,
+        //             int argc, const char*const* argv,
+        //             sqlite3_vtab **ppVTab, char**);
+        public delegate* unmanaged[Cdecl]<IntPtr, IntPtr, int, IntPtr, IntPtr*, IntPtr, int> xConnect; //  int (* xConnect) (sqlite3*, void* pAux,
+        //               int argc, const char*const* argv,
+        //               sqlite3_vtab **ppVTab, char**);
+        public delegate* unmanaged[Cdecl]<IntPtr, IntPtr, int> xBestIndex; //  int (* xBestIndex) (sqlite3_vtab* pVTab, sqlite3_index_info*);
+        public delegate* unmanaged[Cdecl]<IntPtr, int> xDisconnect; //  int (* xDisconnect) (sqlite3_vtab* pVTab);
+        public delegate* unmanaged[Cdecl]<IntPtr, int> xDestroy; //  int (* xDestroy) (sqlite3_vtab* pVTab);
+        public delegate* unmanaged[Cdecl]<IntPtr, IntPtr*, int> xOpen; //  int (* xOpen) (sqlite3_vtab* pVTab, sqlite3_vtab_cursor** ppCursor);
+        public delegate* unmanaged[Cdecl]<IntPtr, int> xClose; //  int (* xClose) (sqlite3_vtab_cursor*);
+        public delegate* unmanaged[Cdecl]<IntPtr, int, IntPtr, int, IntPtr, int> xFilter; //  int (* xFilter) (sqlite3_vtab_cursor*, int idxNum, const char* idxStr,
+        //                int argc, sqlite3_value **argv);
+        public delegate* unmanaged[Cdecl]<IntPtr, int> xNext; //  int (* xNext) (sqlite3_vtab_cursor*);
+        public delegate* unmanaged[Cdecl]<IntPtr, int> xEof; //  int (* xEof) (sqlite3_vtab_cursor*);
+        public delegate* unmanaged[Cdecl]<IntPtr, IntPtr, int, int> xColumn; //  int (* xColumn) (sqlite3_vtab_cursor*, sqlite3_context*, int);
+        public delegate* unmanaged[Cdecl]<IntPtr, IntPtr, int> xRowid; //  int (* xRowid) (sqlite3_vtab_cursor*, sqlite3_int64* pRowid);
+        IntPtr p12; //  int (* xUpdate) (sqlite3_vtab*, int, sqlite3_value**, sqlite3_int64*);
+        IntPtr p13; //  int (* xBegin) (sqlite3_vtab* pVTab);
+        IntPtr p14; //  int (* xSync) (sqlite3_vtab* pVTab);
+        IntPtr p15; //  int (* xCommit) (sqlite3_vtab* pVTab);
+        IntPtr p16; //  int (* xRollback) (sqlite3_vtab* pVTab);
+        IntPtr p17; //  int (* xFindFunction) (sqlite3_vtab* pVtab, int nArg, const char* zName,
+        //                       void (** pxFunc) (sqlite3_context*, int, sqlite3_value**),
+        //                       void** ppArg);
+        IntPtr p18; //int (* xRename) (sqlite3_vtab* pVtab, const char* zNew);
+        ///* The methods above are in version 1 of the sqlite_module object. Those
+        //** below are for version 2 and greater. */
+        IntPtr p19; //int (* xSavepoint) (sqlite3_vtab* pVTab, int);
+        IntPtr p20; //  int (* xRelease) (sqlite3_vtab* pVTab, int);
+        IntPtr p21; //  int (* xRollbackTo) (sqlite3_vtab* pVTab, int);
+        //  /* The methods above are in versions 1 and 2 of the sqlite_module object.
+        //  ** Those below are for version 3 and greater. */
+        IntPtr p22; //  int (* xShadowName) (const char*);
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    internal unsafe struct sqlite3_vtab
+    {
+        IntPtr pModule; //const sqlite3_module* pModule;  /* The module for this virtual table */
+        int nRef; // int nRef;                       /* Number of open cursors */
+        IntPtr zErrMsg; //char* zErrMsg;                  /* Error message from sqlite3_mprintf() */
+        /* Virtual table implementations will typically add additional fields */
+    };
+
+    [StructLayout(LayoutKind.Sequential)]
+    internal unsafe struct sqlite3_vtab_cursor
+    {
+        sqlite3_vtab* pVtab; // sqlite3_vtab *pVtab;       /* Virtual table of this cursor */
+        /* Virtual table implementations will typically add additional fields */
     };
 
     /*

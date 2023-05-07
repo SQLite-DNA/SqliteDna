@@ -167,5 +167,39 @@ namespace TestIntergration
                 }
             }
         }
+
+        [Theory]
+        [InlineData("TestDNNENE.dll")]
+        [InlineData("TestAOT.dll")]
+        public void Tables(string extensionFile)
+        {
+            using (var connection = new SqliteConnection("Data Source=:memory:"))
+            {
+                connection.Open();
+                connection.LoadExtension(extensionFile);
+                {
+                    var command1 = connection.CreateCommand();
+                    command1.CommandText = @"CREATE VIRTUAL TABLE MyTable USING MyLongTable";
+                    Assert.Equal(0, command1.ExecuteNonQuery());
+
+                    var command2 = connection.CreateCommand();
+                    command2.CommandText = @"SELECT COUNT(*) FROM MyTable";
+                    Assert.Equal(3, (long)command2.ExecuteScalar()!);
+
+                    var command3 = connection.CreateCommand();
+                    command3.CommandText = @"SELECT * FROM MyTable";
+                    using (var reader = command3.ExecuteReader())
+                    {
+                        Assert.True(reader.Read());
+                        Assert.Equal(1, (long)reader["Value"]);
+                        Assert.True(reader.Read());
+                        Assert.Equal(5, (long)reader["Value"]);
+                        Assert.True(reader.Read());
+                        Assert.Equal(17, (long)reader["Value"]);
+                        Assert.False(reader.Read());
+                    }
+                }
+            }
+        }
     }
 }

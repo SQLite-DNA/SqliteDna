@@ -105,6 +105,13 @@ namespace TestShared
             throw new Exception("My error message");
         }
 
+        [SqliteTableFunction]
+        public static IEnumerable<long> MyLongTable()
+        {
+            List<long> result = new List<long> { 1, 5, 17 };
+            return result;
+        }
+
         public static int Noo1()
         {
             return 1;

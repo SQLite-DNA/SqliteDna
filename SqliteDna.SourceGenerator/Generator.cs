@@ -31,6 +31,7 @@ namespace SqliteDna.SourceGenerator
             SqliteDna.Integration.Sqlite.Init(db, pzErrMsg, pApi);
 
 [CREATE_FUNCTIONS]
+[CREATE_TABLE_FUNCTIONS]
             return SqliteDna.Integration.Sqlite.SQLITE_OK;
         }
     }
@@ -96,8 +97,17 @@ namespace SqliteDna.SourceGenerator
                 functions += functionBody;
                 createFunctions += $"            SqliteDna.Integration.Sqlite.CreateFunction(\"{i.Name}\", {i.Parameters.Length}, &Functions.{i.Name});\r\n";
             }
+
+            string createTableFunctions = "";
+            foreach (var i in receiver.TableFunctions)
+            {
+                string fullFunctionName = $"{i.ContainingType.ContainingNamespace}.{i.ContainingType.Name}.{i.Name}";
+                createTableFunctions += $"            SqliteDna.Integration.Sqlite.CreateModule(\"{i.Name}\", () => {fullFunctionName}());\r\n";
+            }
+
             source = source.Replace("[FUNCTIONS]", functions);
             source = source.Replace("[CREATE_FUNCTIONS]", createFunctions);
+            source = source.Replace("[CREATE_TABLE_FUNCTIONS]", createTableFunctions);
 
             context.AddSource($"SqliteDna.Init.g.cs", source);
         }
@@ -133,6 +143,7 @@ namespace SqliteDna.SourceGenerator
         class SyntaxReceiver : ISyntaxContextReceiver
         {
             public List<IMethodSymbol> Functions { get; } = new List<IMethodSymbol>();
+            public List<IMethodSymbol> TableFunctions { get; } = new List<IMethodSymbol>();
 
             public void OnVisitSyntaxNode(GeneratorSyntaxContext context)
             {
@@ -141,6 +152,8 @@ namespace SqliteDna.SourceGenerator
                     IMethodSymbol methodSymbol = (context.SemanticModel.GetDeclaredSymbol(methodSyntax) as IMethodSymbol)!;
                     if (methodSymbol.GetAttributes().Any(a => a.AttributeClass?.ToDisplayString(fullNameFormat) == "SqliteDna.Integration.FunctionAttribute"))
                         Functions.Add(methodSymbol);
+                    if (methodSymbol.GetAttributes().Any(a => a.AttributeClass?.ToDisplayString(fullNameFormat) == "SqliteDna.Integration.SqliteTableFunctionAttribute"))
+                        TableFunctions.Add(methodSymbol);
                 }
             }
 

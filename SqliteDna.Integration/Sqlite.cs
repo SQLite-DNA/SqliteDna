@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using System.Collections;
+using System.Globalization;
 using System.Runtime.InteropServices;
 using System.Text;
 
@@ -17,6 +18,11 @@ namespace SqliteDna.Integration
             Sqlite.db = db;
             sqliteApi = *(sqlite3_api_routines*)pApi;
             return 0;
+        }
+
+        internal static sqlite3_api_routines GetAPI()
+        {
+            return sqliteApi;
         }
 
         public static unsafe int CreateFunction(string name, int argc, delegate* unmanaged[Cdecl]<IntPtr, int, IntPtr, int> func)
@@ -130,7 +136,18 @@ namespace SqliteDna.Integration
             sqliteApi.free(new IntPtr(text));
         }
 
-        private static unsafe byte* StringToSqliteUtf8(string s, out int length)
+        public static unsafe int CreateModule(string name, Func<IEnumerable> func)
+        {
+            FunctionModule functionModule = new();
+            GCHandle.Alloc(functionModule);
+
+            FunctionModule.ModuleParams moduleParams = new(func);
+            GCHandle gch = GCHandle.Alloc(moduleParams);
+
+            return sqliteApi.create_module(db, StringToSqliteUtf8(name, out _), ref functionModule.module, GCHandle.ToIntPtr(gch));
+        }
+
+        internal static unsafe byte* StringToSqliteUtf8(string s, out int length)
         {
             byte[] bytes = Encoding.UTF8.GetBytes(s);
             var pzString = (byte*)sqliteApi.malloc(bytes.Length + 1);
