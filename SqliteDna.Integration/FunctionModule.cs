@@ -41,12 +41,6 @@ namespace SqliteDna.Integration
         [UnmanagedCallersOnly(CallConvs = new[] { typeof(CallConvCdecl) })]
         private static unsafe int xCreate(IntPtr db, IntPtr aux, int argc, IntPtr argv, IntPtr* vtab, IntPtr err)
         {
-            return Sqlite.SQLITE_OK;
-        }
-
-        [UnmanagedCallersOnly(CallConvs = new[] { typeof(CallConvCdecl) })]
-        private static unsafe int XConnect(IntPtr db, IntPtr aux, int argc, IntPtr argv, IntPtr* vtab, IntPtr err)
-        {
             Sqlite.GetAPI().declare_vtab(db, Sqlite.StringToSqliteUtf8("CREATE TABLE x(value)", out _));
             (*vtab) = Sqlite.GetAPI().malloc(sizeof(VTab));
             (*(VTab*)(*vtab)).moduleParams = aux;
@@ -54,15 +48,21 @@ namespace SqliteDna.Integration
         }
 
         [UnmanagedCallersOnly(CallConvs = new[] { typeof(CallConvCdecl) })]
+        private static unsafe int XConnect(IntPtr db, IntPtr aux, int argc, IntPtr argv, IntPtr* vtab, IntPtr err)
+        {
+            return Sqlite.SQLITE_OK;
+        }
+
+        [UnmanagedCallersOnly(CallConvs = new[] { typeof(CallConvCdecl) })]
         private static unsafe int xDisconnect(IntPtr vtab)
         {
-            Sqlite.GetAPI().free(vtab);
             return Sqlite.SQLITE_OK;
         }
 
         [UnmanagedCallersOnly(CallConvs = new[] { typeof(CallConvCdecl) })]
         private static unsafe int xDestroy(IntPtr vtab)
         {
+            Sqlite.GetAPI().free(vtab);
             return Sqlite.SQLITE_OK;
         }
 

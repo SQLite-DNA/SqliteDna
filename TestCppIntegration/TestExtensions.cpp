@@ -39,6 +39,16 @@ namespace TestCppIntegration
 			NorthwindDB("TestDNNENE.dll");
 		}
 
+		TEST_METHOD(TablesAOT)
+		{
+			Tables("TestAOT.dll");
+		}
+
+		TEST_METHOD(TablesDNNE)
+		{
+			Tables("TestDNNENE.dll");
+		}
+
 	private:
 
 		void Functions(const std::string& extensionFile)
@@ -176,6 +186,28 @@ namespace TestCppIntegration
 				SQLite::Statement query2(db, "SELECT NullableBlob(NULL)");
 				query2.executeStep();
 				Assert::IsTrue(query2.getColumn(0).isNull());
+			}
+		}
+
+		void Tables(const std::string& extensionFile)
+		{
+			SQLite::Database db(":memory:", SQLite::OPEN_READWRITE);
+			db.loadExtension(extensionFile.c_str(), nullptr);
+			{
+				Assert::AreEqual(0, db.exec("CREATE VIRTUAL TABLE MyTable USING MyLongTable"));
+
+				SQLite::Statement query1(db, "SELECT COUNT(*) FROM MyTable");
+				Assert::IsTrue(query1.executeStep());
+				Assert::AreEqual(3, query1.getColumn(0).getInt());
+
+				SQLite::Statement query2(db, "SELECT * FROM MyTable");
+				Assert::IsTrue(query2.executeStep());
+				Assert::AreEqual<int64_t>(1, query2.getColumn(0).getInt64());
+				Assert::IsTrue(query2.executeStep());
+				Assert::AreEqual<int64_t>(5, query2.getColumn(0).getInt64());
+				Assert::IsTrue(query2.executeStep());
+				Assert::AreEqual<int64_t>(17, query2.getColumn(0).getInt64());
+				Assert::IsFalse(query2.executeStep());
 			}
 		}
 	};
