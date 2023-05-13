@@ -10,4 +10,7 @@
 // add headers that you want to pre-compile here
 #include <SQLiteCpp/SQLiteCpp.h>
 
+#pragma comment(lib, "sqlite3.lib")
+#pragma comment(lib, "SQLiteCpp.lib")
+
 #endif //PCH_H

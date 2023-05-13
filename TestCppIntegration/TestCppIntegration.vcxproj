@@ -77,15 +77,23 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
+    <IncludePath>SQLiteCpp\include;$(IncludePath)</IncludePath>
+    <LibraryPath>SQLiteCpp\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
+    <IncludePath>SQLiteCpp\include;$(IncludePath)</IncludePath>
+    <LibraryPath>SQLiteCpp\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
+    <IncludePath>SQLiteCpp\include;$(IncludePath)</IncludePath>
+    <LibraryPath>SQLiteCpp\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
+    <IncludePath>SQLiteCpp\include;$(IncludePath)</IncludePath>
+    <LibraryPath>SQLiteCpp\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -107,7 +115,8 @@ xcopy /y $(SolutionDir)TestDNNE\bin\$(ConfigurationName)\net7.0\TestDNNENE.dll $
 xcopy /y $(SolutionDir)TestDNNE\bin\$(ConfigurationName)\net7.0\TestDNNE.runtimeconfig.json $(SolutionDir)x64\$(ConfigurationName)
 xcopy /y $(SolutionDir)TestDNNE\bin\$(ConfigurationName)\net7.0\SqliteDna.Integration.dll $(SolutionDir)x64\$(ConfigurationName)
 xcopy /y $(SolutionDir)TestAOT\bin\Release\net7.0\publish\TestAOT.dll $(SolutionDir)x64\$(ConfigurationName)
-xcopy /y $(SolutionDir)TestIntergration\*.db $(SolutionDir)x64\$(ConfigurationName)</Command>
+xcopy /y $(SolutionDir)TestIntergration\*.db $(SolutionDir)x64\$(ConfigurationName)
+xcopy /y $(SolutionDir)TestCppIntegration\SQLiteCpp\bin\sqlite3.dll $(SolutionDir)x64\$(ConfigurationName)</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -130,7 +139,8 @@ xcopy /y $(SolutionDir)TestDNNE\bin\$(ConfigurationName)\net7.0\TestDNNENE.dll $
 xcopy /y $(SolutionDir)TestDNNE\bin\$(ConfigurationName)\net7.0\TestDNNE.runtimeconfig.json $(SolutionDir)x64\$(ConfigurationName)
 xcopy /y $(SolutionDir)TestDNNE\bin\$(ConfigurationName)\net7.0\SqliteDna.Integration.dll $(SolutionDir)x64\$(ConfigurationName)
 xcopy /y $(SolutionDir)TestAOT\bin\Release\net7.0\publish\TestAOT.dll $(SolutionDir)x64\$(ConfigurationName)
-xcopy /y $(SolutionDir)TestIntergration\*.db $(SolutionDir)x64\$(ConfigurationName)</Command>
+xcopy /y $(SolutionDir)TestIntergration\*.db $(SolutionDir)x64\$(ConfigurationName)
+xcopy /y $(SolutionDir)TestCppIntegration\SQLiteCpp\bin\sqlite3.dll $(SolutionDir)x64\$(ConfigurationName)</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -157,7 +167,8 @@ xcopy /y $(SolutionDir)TestDNNE\bin\$(ConfigurationName)\net7.0\TestDNNENE.dll $
 xcopy /y $(SolutionDir)TestDNNE\bin\$(ConfigurationName)\net7.0\TestDNNE.runtimeconfig.json $(SolutionDir)x64\$(ConfigurationName)
 xcopy /y $(SolutionDir)TestDNNE\bin\$(ConfigurationName)\net7.0\SqliteDna.Integration.dll $(SolutionDir)x64\$(ConfigurationName)
 xcopy /y $(SolutionDir)TestAOT\bin\Release\net7.0\publish\TestAOT.dll $(SolutionDir)x64\$(ConfigurationName)
-xcopy /y $(SolutionDir)TestIntergration\*.db $(SolutionDir)x64\$(ConfigurationName)</Command>
+xcopy /y $(SolutionDir)TestIntergration\*.db $(SolutionDir)x64\$(ConfigurationName)
+xcopy /y $(SolutionDir)TestCppIntegration\SQLiteCpp\bin\sqlite3.dll $(SolutionDir)x64\$(ConfigurationName)</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -184,7 +195,8 @@ xcopy /y $(SolutionDir)TestDNNE\bin\$(ConfigurationName)\net7.0\TestDNNENE.dll $
 xcopy /y $(SolutionDir)TestDNNE\bin\$(ConfigurationName)\net7.0\TestDNNE.runtimeconfig.json $(SolutionDir)x64\$(ConfigurationName)
 xcopy /y $(SolutionDir)TestDNNE\bin\$(ConfigurationName)\net7.0\SqliteDna.Integration.dll $(SolutionDir)x64\$(ConfigurationName)
 xcopy /y $(SolutionDir)TestAOT\bin\Release\net7.0\publish\TestAOT.dll $(SolutionDir)x64\$(ConfigurationName)
-xcopy /y $(SolutionDir)TestIntergration\*.db $(SolutionDir)x64\$(ConfigurationName)</Command>
+xcopy /y $(SolutionDir)TestIntergration\*.db $(SolutionDir)x64\$(ConfigurationName)
+xcopy /y $(SolutionDir)TestCppIntegration\SQLiteCpp\bin\sqlite3.dll $(SolutionDir)x64\$(ConfigurationName)</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
