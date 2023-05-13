@@ -166,6 +166,9 @@ namespace SqliteDna.Integration
                 case string stringo:
                     ResultString(context, stringo);
                     break;
+                case DateTime datetimeo:
+                    ResultDateTime(context, datetimeo);
+                    break;
                 case byte[] byteo:
                     ResultBlob(context, byteo);
                     break;
