@@ -147,6 +147,34 @@ namespace SqliteDna.Integration
             return sqliteApi.create_module(db, StringToSqliteUtf8(name, out _), ref functionModule.module, GCHandle.ToIntPtr(gch));
         }
 
+        internal static unsafe void ResultObject(IntPtr context, object? o)
+        {
+            switch (o)
+            {
+                case null:
+                    sqliteApi.result_null(context);
+                    break;
+                case int into:
+                    ResultInt(context, into);
+                    break;
+                case long longo:
+                    ResultInt64(context, longo);
+                    break;
+                case double doubleo:
+                    ResultDouble(context, doubleo);
+                    break;
+                case string stringo:
+                    ResultString(context, stringo);
+                    break;
+                case byte[] byteo:
+                    ResultBlob(context, byteo);
+                    break;
+                default:
+                    ResultString(context, o.ToString());
+                    break;
+            }
+        }
+
         internal static unsafe byte* StringToSqliteUtf8(string s, out int length)
         {
             byte[] bytes = Encoding.UTF8.GetBytes(s);

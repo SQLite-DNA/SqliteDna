@@ -194,13 +194,13 @@ namespace TestCppIntegration
 			SQLite::Database db(":memory:", SQLite::OPEN_READWRITE);
 			db.loadExtension(extensionFile.c_str(), nullptr);
 			{
-				Assert::AreEqual(0, db.exec("CREATE VIRTUAL TABLE MyTable USING MyLongTable"));
+				Assert::AreEqual(0, db.exec("CREATE VIRTUAL TABLE LongTable USING MyLongTable"));
 
-				SQLite::Statement query1(db, "SELECT COUNT(*) FROM MyTable");
+				SQLite::Statement query1(db, "SELECT COUNT(*) FROM LongTable");
 				Assert::IsTrue(query1.executeStep());
 				Assert::AreEqual(3, query1.getColumn(0).getInt());
 
-				SQLite::Statement query2(db, "SELECT * FROM MyTable");
+				SQLite::Statement query2(db, "SELECT * FROM LongTable");
 				Assert::IsTrue(query2.executeStep());
 				Assert::AreEqual<int64_t>(1, query2.getColumn(0).getInt64());
 				Assert::IsTrue(query2.executeStep());
@@ -208,6 +208,22 @@ namespace TestCppIntegration
 				Assert::IsTrue(query2.executeStep());
 				Assert::AreEqual<int64_t>(17, query2.getColumn(0).getInt64());
 				Assert::IsFalse(query2.executeStep());
+			}
+			{
+				Assert::AreEqual(0, db.exec("CREATE VIRTUAL TABLE StringTable USING MyStringTable"));
+
+				SQLite::Statement query(db, "SELECT * FROM StringTable");
+				Assert::IsTrue(query.executeStep());
+				Assert::AreEqual(std::string("str1"), query.getColumn(0).getString());
+				Assert::IsTrue(query.executeStep());
+				Assert::AreEqual(std::string("str2"), query.getColumn(0).getString());
+			}
+			{
+				Assert::AreEqual(0, db.exec("CREATE VIRTUAL TABLE CustomStringTable USING MyCustomStringTable"));
+
+				SQLite::Statement query(db, "SELECT * FROM CustomStringTable");
+				Assert::IsTrue(query.executeStep());
+				Assert::AreEqual(std::string("MyCustomString"), query.getColumn(0).getString());
 			}
 		}
 	};

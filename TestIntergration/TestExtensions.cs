@@ -179,15 +179,15 @@ namespace TestIntergration
                 connection.LoadExtension(extensionFile);
                 {
                     var command1 = connection.CreateCommand();
-                    command1.CommandText = @"CREATE VIRTUAL TABLE MyTable USING MyLongTable";
+                    command1.CommandText = @"CREATE VIRTUAL TABLE LongTable USING MyLongTable";
                     Assert.Equal(0, command1.ExecuteNonQuery());
 
                     var command2 = connection.CreateCommand();
-                    command2.CommandText = @"SELECT COUNT(*) FROM MyTable";
+                    command2.CommandText = @"SELECT COUNT(*) FROM LongTable";
                     Assert.Equal(3, (long)command2.ExecuteScalar()!);
 
                     var command3 = connection.CreateCommand();
-                    command3.CommandText = @"SELECT * FROM MyTable";
+                    command3.CommandText = @"SELECT * FROM LongTable";
                     using (var reader = command3.ExecuteReader())
                     {
                         Assert.True(reader.Read());
@@ -197,6 +197,34 @@ namespace TestIntergration
                         Assert.True(reader.Read());
                         Assert.Equal(17, (long)reader["Value"]);
                         Assert.False(reader.Read());
+                    }
+                }
+                {
+                    var command1 = connection.CreateCommand();
+                    command1.CommandText = @"CREATE VIRTUAL TABLE StringTable USING MyStringTable";
+                    Assert.Equal(0, command1.ExecuteNonQuery());
+
+                    var command2 = connection.CreateCommand();
+                    command2.CommandText = @"SELECT * FROM StringTable";
+                    using (var reader = command2.ExecuteReader())
+                    {
+                        Assert.True(reader.Read());
+                        Assert.Equal("str1", (string)reader["Value"]);
+                        Assert.True(reader.Read());
+                        Assert.Equal("str2", (string)reader["Value"]);
+                    }
+                }
+                {
+                    var command1 = connection.CreateCommand();
+                    command1.CommandText = @"CREATE VIRTUAL TABLE CustomStringTable USING MyCustomStringTable";
+                    Assert.Equal(0, command1.ExecuteNonQuery());
+
+                    var command2 = connection.CreateCommand();
+                    command2.CommandText = @"SELECT * FROM CustomStringTable";
+                    using (var reader = command2.ExecuteReader())
+                    {
+                        Assert.True(reader.Read());
+                        Assert.Equal("MyCustomString", (string)reader["Value"]);
                     }
                 }
             }

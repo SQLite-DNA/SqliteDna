@@ -112,9 +112,31 @@ namespace TestShared
             return result;
         }
 
+        [SqliteTableFunction]
+        public static IEnumerable<string> MyStringTable()
+        {
+            List<string> result = new List<string> { "str1", "str2" };
+            return result;
+        }
+
+        [SqliteTableFunction]
+        public static IEnumerable<CustomString> MyCustomStringTable()
+        {
+            List<CustomString> result = new List<CustomString> { new CustomString() };
+            return result;
+        }
+
         public static int Noo1()
         {
             return 1;
+        }
+
+        public class CustomString
+        {
+            public override string ToString()
+            {
+                return "MyCustomString";
+            }
         }
 
         private static int internalCounter;

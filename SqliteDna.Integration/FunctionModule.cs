@@ -117,7 +117,7 @@ namespace SqliteDna.Integration
         private static unsafe int xColumn(IntPtr cursor, IntPtr context, int i)
         {
             IEnumerator enumerator = (IEnumerator)GCHandle.FromIntPtr((*(Cursor*)cursor).enumerator).Target!;
-            Sqlite.GetAPI().result_int64(context, (long)enumerator.Current);
+            Sqlite.ResultObject(context, enumerator.Current);
             return Sqlite.SQLITE_OK;
         }
 
