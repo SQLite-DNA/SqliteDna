@@ -8,12 +8,14 @@ namespace SqliteDna.Integration
     {
         public class ModuleParams
         {
-            public ModuleParams(Func<IEnumerable> func)
+            public ModuleParams(Func<IEnumerable> func, System.Reflection.PropertyInfo[] properties)
             {
                 this.func = func;
+                this.properties = properties;
             }
 
             public Func<IEnumerable> func;
+            public System.Reflection.PropertyInfo[] properties;
         }
 
         public FunctionModule()
@@ -41,7 +43,14 @@ namespace SqliteDna.Integration
         [UnmanagedCallersOnly(CallConvs = new[] { typeof(CallConvCdecl) })]
         private static unsafe int xCreate(IntPtr db, IntPtr aux, int argc, IntPtr argv, IntPtr* vtab, IntPtr err)
         {
-            Sqlite.GetAPI().declare_vtab(db, Sqlite.StringToSqliteUtf8("CREATE TABLE x(value)", out _));
+            string schema = "value";
+            ModuleParams moduleParams = (ModuleParams)GCHandle.FromIntPtr(aux).Target!;
+            if (moduleParams.properties.Length > 0)
+            {
+                schema = String.Join(",", moduleParams.properties.Select(i => i.Name));
+            }
+
+            Sqlite.GetAPI().declare_vtab(db, Sqlite.StringToSqliteUtf8($"CREATE TABLE x({schema})", out _));
             (*vtab) = Sqlite.GetAPI().malloc(sizeof(VTab));
             (*(VTab*)(*vtab)).moduleParams = aux;
             return Sqlite.SQLITE_OK;
@@ -82,6 +91,7 @@ namespace SqliteDna.Integration
             Cursor* cursor = (Cursor*)(*pcursor);
             (*cursor).enumerator = GCHandle.ToIntPtr(GCHandle.Alloc(enumerator));
             (*cursor).eof = !enumerator.MoveNext();
+            (*cursor).properties = GCHandle.ToIntPtr(GCHandle.Alloc(moduleParams.properties));
 
             return Sqlite.SQLITE_OK;
         }
@@ -117,7 +127,11 @@ namespace SqliteDna.Integration
         private static unsafe int xColumn(IntPtr cursor, IntPtr context, int i)
         {
             IEnumerator enumerator = (IEnumerator)GCHandle.FromIntPtr((*(Cursor*)cursor).enumerator).Target!;
-            Sqlite.ResultObject(context, enumerator.Current);
+            System.Reflection.PropertyInfo[] properties = (System.Reflection.PropertyInfo[])GCHandle.FromIntPtr((*(Cursor*)cursor).properties).Target!;
+            if (properties.Length == 0)
+                Sqlite.ResultObject(context, enumerator.Current);
+            else
+                Sqlite.ResultObject(context, properties[i].GetValue(enumerator.Current, null));
             return Sqlite.SQLITE_OK;
         }
 
@@ -144,6 +158,7 @@ namespace SqliteDna.Integration
 
             public IntPtr enumerator;
             public bool eof;
+            public IntPtr properties;
         };
     }
 }

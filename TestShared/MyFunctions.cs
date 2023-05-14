@@ -2,6 +2,8 @@
 
 namespace TestShared
 {
+    public record CustomRecord(string Name, int Id);
+
     public class MyFunctions
     {
         [Function]
@@ -123,6 +125,13 @@ namespace TestShared
         public static IEnumerable<CustomString> MyCustomStringTable()
         {
             List<CustomString> result = new List<CustomString> { new CustomString() };
+            return result;
+        }
+
+        [SqliteTableFunction]
+        public static IEnumerable<CustomRecord> MyRecordTable()
+        {
+            List<CustomRecord> result = new List<CustomRecord> { new CustomRecord("n42", 420), new CustomRecord("n50", 5) };
             return result;
         }
 

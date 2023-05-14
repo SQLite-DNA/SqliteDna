@@ -102,7 +102,17 @@ namespace SqliteDna.SourceGenerator
             foreach (var i in receiver.TableFunctions)
             {
                 string fullFunctionName = $"{i.ContainingType.ContainingNamespace}.{i.ContainingType.Name}.{i.Name}";
-                createTableFunctions += $"            SqliteDna.Integration.Sqlite.CreateModule(\"{i.Name}\", () => {fullFunctionName}());\r\n";
+
+                string properties = "";
+                ITypeSymbol? elementType = GetGenericArgument(i.ReturnType);
+                if (elementType != null)
+                {
+                    string fullTypeName = $"{elementType.ContainingNamespace}.{elementType.Name}";
+                    foreach (string p in GetPropertyNames(elementType))
+                        properties += $"typeof({fullTypeName}).GetProperty(\"{p}\")!,";
+                }
+
+                createTableFunctions += $"            SqliteDna.Integration.Sqlite.CreateModule(\"{i.Name}\", new System.Reflection.PropertyInfo[] {{{properties}}}, () => {fullFunctionName}());\r\n";
             }
 
             source = source.Replace("[FUNCTIONS]", functions);
@@ -117,7 +127,33 @@ namespace SqliteDna.SourceGenerator
             context.RegisterForSyntaxNotifications(() => new SyntaxReceiver());
         }
 
-        private static string AdaptType(ITypeSymbol typeSymbol)
+        private static ITypeSymbol? GetGenericArgument(ITypeSymbol enumerable)
+        {
+            if (enumerable is INamedTypeSymbol namedEnumerable)
+                return namedEnumerable.TypeArguments.FirstOrDefault();
+
+            return null;
+        }
+
+        private static IEnumerable<string> GetPropertyNames(ITypeSymbol elementType)
+        {
+            List<string> result = new List<string>();
+            if (AdaptType(elementType) == null)
+            {
+                foreach (ISymbol member in elementType.GetMembers())
+                {
+                    if (member.DeclaredAccessibility == Accessibility.Public && !member.IsImplicitlyDeclared)
+                    {
+                        if (member is IPropertySymbol property)
+                            result.Add(property.Name);
+                    }
+                }
+            }
+
+            return result;
+        }
+
+        private static string? AdaptType(ITypeSymbol typeSymbol)
         {
             switch (typeSymbol.SpecialType)
             {
@@ -129,6 +165,8 @@ namespace SqliteDna.SourceGenerator
                     return "Double";
                 case SpecialType.System_String:
                     return "String";
+                case SpecialType.System_DateTime:
+                    return "DateTime";
             }
 
             if (typeSymbol is IArrayTypeSymbol arrayTypeSymbol)
@@ -137,7 +175,7 @@ namespace SqliteDna.SourceGenerator
                     return "Blob";
             }
 
-            return typeSymbol.Name;
+            return null;
         }
 
         class SyntaxReceiver : ISyntaxContextReceiver

@@ -225,6 +225,17 @@ namespace TestCppIntegration
 				Assert::IsTrue(query.executeStep());
 				Assert::AreEqual(std::string("MyCustomString"), query.getColumn(0).getString());
 			}
+			{
+				Assert::AreEqual(0, db.exec("CREATE VIRTUAL TABLE RecordTable USING MyRecordTable"));
+
+				SQLite::Statement query(db, "SELECT Name, Id FROM RecordTable");
+				Assert::IsTrue(query.executeStep());
+				Assert::AreEqual(std::string("n42"), query.getColumn(0).getString());
+				Assert::AreEqual(420, query.getColumn(1).getInt());
+				Assert::IsTrue(query.executeStep());
+				Assert::AreEqual(std::string("n50"), query.getColumn(0).getString());
+				Assert::AreEqual(5, query.getColumn(1).getInt());
+			}
 		}
 	};
 }

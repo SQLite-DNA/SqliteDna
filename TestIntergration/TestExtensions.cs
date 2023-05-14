@@ -227,6 +227,23 @@ namespace TestIntergration
                         Assert.Equal("MyCustomString", (string)reader["Value"]);
                     }
                 }
+                {
+                    var command1 = connection.CreateCommand();
+                    command1.CommandText = @"CREATE VIRTUAL TABLE RecordTable USING MyRecordTable";
+                    Assert.Equal(0, command1.ExecuteNonQuery());
+
+                    var command2 = connection.CreateCommand();
+                    command2.CommandText = @"SELECT Name, Id FROM RecordTable";
+                    using (var reader = command2.ExecuteReader())
+                    {
+                        Assert.True(reader.Read());
+                        Assert.Equal("n42", (string)reader["Name"]);
+                        Assert.Equal(420, (long)reader["Id"]);
+                        Assert.True(reader.Read());
+                        Assert.Equal("n50", (string)reader["Name"]);
+                        Assert.Equal(5, (long)reader["Id"]);
+                    }
+                }
             }
         }
     }
