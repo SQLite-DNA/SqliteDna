@@ -93,7 +93,7 @@ namespace SqliteDna.SourceGenerator
 
                 functionBody = functionBody.Replace("[FUNCTION_VALUES]", functionValues);
                 functionBody = functionBody.Replace("[FUNCTION_NAME]", i.Name);
-                functionBody = functionBody.Replace("[FULL_FUNCTION_NAME]", $"{i.ContainingType.ContainingNamespace}.{i.ContainingType.Name}.{i.Name}");
+                functionBody = functionBody.Replace("[FULL_FUNCTION_NAME]", Util.GetFullMethodName(i));
                 functions += functionBody;
                 createFunctions += $"            SqliteDna.Integration.Sqlite.CreateFunction(\"{i.Name}\", {i.Parameters.Length}, &Functions.{i.Name});\r\n";
             }
@@ -101,18 +101,16 @@ namespace SqliteDna.SourceGenerator
             string createTableFunctions = "";
             foreach (var i in receiver.TableFunctions)
             {
-                string fullFunctionName = $"{i.ContainingType.ContainingNamespace}.{i.ContainingType.Name}.{i.Name}";
-
                 string properties = "";
                 ITypeSymbol? elementType = GetGenericArgument(i.ReturnType);
                 if (elementType != null)
                 {
-                    string fullTypeName = $"{elementType.ContainingNamespace}.{elementType.Name}";
+                    string fullTypeName = Util.GetFullTypeName(elementType);
                     foreach (string p in GetPropertyNames(elementType))
                         properties += $"typeof({fullTypeName}).GetProperty(\"{p}\")!,";
                 }
 
-                createTableFunctions += $"            SqliteDna.Integration.Sqlite.CreateModule(\"{i.Name}\", new System.Reflection.PropertyInfo[] {{{properties}}}, () => {fullFunctionName}());\r\n";
+                createTableFunctions += $"            SqliteDna.Integration.Sqlite.CreateModule(\"{i.Name}\", new System.Reflection.PropertyInfo[] {{{properties}}}, () => {Util.GetFullMethodName(i)}());\r\n";
             }
 
             source = source.Replace("[FUNCTIONS]", functions);

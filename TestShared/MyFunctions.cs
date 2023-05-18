@@ -2,10 +2,10 @@
 
 namespace TestShared
 {
-    public record CustomRecord(string Name, int Id);
-
     public class MyFunctions
     {
+        public record CustomRecord(string Name, int Id);
+
         [Function]
         public static int Foo2()
         {

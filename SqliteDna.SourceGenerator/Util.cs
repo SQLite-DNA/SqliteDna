@@ -6,7 +6,12 @@ namespace SqliteDna.SourceGenerator
     {
         public static string GetFullTypeName(ITypeSymbol type)
         {
-            return $"{type.ContainingNamespace}.{type.Name}";
+            return type.ToDisplayString();
+        }
+
+        public static string GetFullMethodName(IMethodSymbol method)
+        {
+            return $"{GetFullTypeName(method.ContainingType)}.{method.Name}";
         }
     }
 }
