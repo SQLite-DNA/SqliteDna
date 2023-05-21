@@ -16,6 +16,7 @@ namespace SqliteDna.Integration
 
             public Func<IEnumerable> func;
             public System.Reflection.PropertyInfo[] properties;
+            public string[]? arguments;
         }
 
         public FunctionModule()
@@ -43,8 +44,21 @@ namespace SqliteDna.Integration
         [UnmanagedCallersOnly(CallConvs = new[] { typeof(CallConvCdecl) })]
         private static unsafe int xCreate(IntPtr db, IntPtr aux, int argc, IntPtr argv, IntPtr* vtab, IntPtr err)
         {
-            string schema = "value";
             ModuleParams moduleParams = (ModuleParams)GCHandle.FromIntPtr(aux).Target!;
+
+            string[]? arguments = null;
+            if (argc > defaultCreationArgc)
+            {
+                arguments = new string[argc - defaultCreationArgc];
+                char** pargv = (char**)argv;
+                for (int i = 0; i < arguments.Length; ++i)
+                {
+                    arguments[i] = Marshal.PtrToStringAnsi((IntPtr)(*(pargv + i + defaultCreationArgc)))!;
+                }
+            }
+            moduleParams.arguments = arguments;
+
+            string schema = "value";
             if (moduleParams.properties.Length > 0)
             {
                 schema = String.Join(",", moduleParams.properties.Select(i => i.Name));
@@ -142,6 +156,7 @@ namespace SqliteDna.Integration
         }
 
         public sqlite3_module module;
+        private const int defaultCreationArgc = 3;
 
         [StructLayout(LayoutKind.Sequential)]
         private unsafe struct VTab
