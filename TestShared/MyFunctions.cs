@@ -135,6 +135,13 @@ namespace TestShared
             return result;
         }
 
+        [SqliteTableFunction]
+        public static IEnumerable<CustomRecord> MyRecordParamsTable(string name, int id)
+        {
+            List<CustomRecord> result = new List<CustomRecord> { new CustomRecord(name, id) };
+            return result;
+        }
+
         public static int Noo1()
         {
             return 1;

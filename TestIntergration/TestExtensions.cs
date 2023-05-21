@@ -244,6 +244,21 @@ namespace TestIntergration
                         Assert.Equal(5, (long)reader["Id"]);
                     }
                 }
+                {
+                    var command1 = connection.CreateCommand();
+                    command1.CommandText = @"CREATE VIRTUAL TABLE RecordParamsTable USING MyRecordParamsTable(name1, 100)";
+                    Assert.Equal(0, command1.ExecuteNonQuery());
+
+                    var command2 = connection.CreateCommand();
+                    command2.CommandText = @"SELECT * FROM RecordParamsTable";
+                    using (var reader = command2.ExecuteReader())
+                    {
+                        Assert.True(reader.Read());
+                        Assert.Equal("name1", (string)reader["Name"]);
+                        Assert.Equal(100, (long)reader["Id"]);
+                        Assert.False(reader.Read());
+                    }
+                }
             }
         }
     }

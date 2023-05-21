@@ -8,13 +8,13 @@ namespace SqliteDna.Integration
     {
         public class ModuleParams
         {
-            public ModuleParams(Func<IEnumerable> func, System.Reflection.PropertyInfo[] properties)
+            public ModuleParams(Func<string[], IEnumerable> func, System.Reflection.PropertyInfo[] properties)
             {
                 this.func = func;
                 this.properties = properties;
             }
 
-            public Func<IEnumerable> func;
+            public Func<string[], IEnumerable> func;
             public System.Reflection.PropertyInfo[] properties;
             public string[]? arguments;
         }
@@ -99,7 +99,7 @@ namespace SqliteDna.Integration
         private static unsafe int xOpen(IntPtr vtab, IntPtr* pcursor)
         {
             ModuleParams moduleParams = (ModuleParams)GCHandle.FromIntPtr((*(VTab*)vtab).moduleParams).Target!;
-            var enumerator = moduleParams.func().GetEnumerator();
+            var enumerator = moduleParams.func(moduleParams.arguments!).GetEnumerator();
 
             (*pcursor) = Sqlite.GetAPI().malloc(sizeof(Cursor));
             Cursor* cursor = (Cursor*)(*pcursor);

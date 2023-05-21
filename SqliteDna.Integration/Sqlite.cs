@@ -80,6 +80,31 @@ namespace SqliteDna.Integration
             return result;
         }
 
+        public static unsafe int ArgumentInt(string[] arguments, int i)
+        {
+            return int.Parse(arguments[i]);
+        }
+
+        public static unsafe long ArgumentInt64(string[] arguments, int i)
+        {
+            return long.Parse(arguments[i]);
+        }
+
+        public static unsafe double ArgumentDouble(string[] arguments, int i)
+        {
+            return double.Parse(arguments[i]);
+        }
+
+        public static unsafe string ArgumentString(string[] arguments, int i)
+        {
+            return arguments[i];
+        }
+
+        public static unsafe DateTime ArgumentDateTime(string[] arguments, int i)
+        {
+            return DateTime.Parse(arguments[i], CultureInfo.InvariantCulture);
+        }
+
         public static unsafe void ResultInt(IntPtr context, int i)
         {
             sqliteApi.result_int(context, i);
@@ -136,7 +161,7 @@ namespace SqliteDna.Integration
             sqliteApi.free(new IntPtr(text));
         }
 
-        public static unsafe int CreateModule(string name, System.Reflection.PropertyInfo[] properties, Func<IEnumerable> func)
+        public static unsafe int CreateModule(string name, System.Reflection.PropertyInfo[] properties, Func<string[], IEnumerable> func)
         {
             FunctionModule functionModule = new();
             GCHandle.Alloc(functionModule);

@@ -110,7 +110,18 @@ namespace SqliteDna.SourceGenerator
                         properties += $"typeof({fullTypeName}).GetProperty(\"{p}\")!,";
                 }
 
-                createTableFunctions += $"            SqliteDna.Integration.Sqlite.CreateModule(\"{i.Name}\", new System.Reflection.PropertyInfo[] {{{properties}}}, () => {Util.GetFullMethodName(i)}());\r\n";
+                string functionArguments = "";
+                int valueIndex = 0;
+                foreach (var p in i.Parameters)
+                {
+                    if (valueIndex > 0)
+                        functionArguments += ", ";
+                    functionArguments += $"SqliteDna.Integration.Sqlite.Argument{AdaptType(p.Type)}(arguments, {valueIndex})";
+                    ++valueIndex;
+                }
+                string functionBody = $"{Util.GetFullMethodName(i)}({functionArguments})";
+
+                createTableFunctions += $"            SqliteDna.Integration.Sqlite.CreateModule(\"{i.Name}\", new System.Reflection.PropertyInfo[] {{{properties}}}, (arguments) => {functionBody});\r\n";
             }
 
             source = source.Replace("[FUNCTIONS]", functions);
