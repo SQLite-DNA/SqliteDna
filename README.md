@@ -93,3 +93,4 @@ You can throw an exception from your function and it will be converted to an SQL
 * https://sqlsharp.com/features/
 * https://github.com/tcdi/pgx - Build PostgreSQL extensions with Rust
 * https://learn.microsoft.com/en-us/azure/postgresql/single-server/concepts-extensions - List of PostgreSQL extensions available in Azure
+* https://observablehq.com/@asg017/introducing-sqlite-vss
