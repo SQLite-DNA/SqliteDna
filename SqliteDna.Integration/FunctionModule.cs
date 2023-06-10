@@ -53,7 +53,7 @@ namespace SqliteDna.Integration
                 char** pargv = (char**)argv;
                 for (int i = 0; i < arguments.Length; ++i)
                 {
-                    arguments[i] = Marshal.PtrToStringAnsi((IntPtr)(*(pargv + i + defaultCreationArgc)))!;
+                    arguments[i] = RemoveEnclosingQuotes(Marshal.PtrToStringAnsi((IntPtr)(*(pargv + i + defaultCreationArgc)))!);
                 }
             }
             moduleParams.arguments = arguments;
@@ -153,6 +153,18 @@ namespace SqliteDna.Integration
         private static unsafe int xRowid(IntPtr cursor, IntPtr pRowid)
         {
             return Sqlite.SQLITE_OK;
+        }
+
+        private static string RemoveEnclosingQuotes(string s)
+        {
+            if (s.Length >= 2)
+            {
+                foreach (char c in new char[] { '"', '\'' })
+                    if (s.StartsWith(c) && s.EndsWith(c))
+                        return s.Substring(1, s.Length - 2);
+            }
+
+            return s;
         }
 
         public sqlite3_module module;
