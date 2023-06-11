@@ -132,7 +132,7 @@ namespace SqliteDna.Integration
         IntPtr p110; //  const void * (*value_text16)(sqlite3_value*);
         IntPtr p111; //  const void * (*value_text16be)(sqlite3_value*);
         IntPtr p112; //  const void * (*value_text16le)(sqlite3_value*);
-        IntPtr p113; //  int  (*value_type)(sqlite3_value*);
+        public readonly delegate* unmanaged[Cdecl]<IntPtr, int> value_type; //  int  (*value_type)(sqlite3_value*);
         IntPtr p114; //  char *(*vmprintf)(const char*,va_list);
         /* Added ??? */
         IntPtr p115; //  int (*overload_function)(sqlite3*, const char *zFuncName, int nArg);

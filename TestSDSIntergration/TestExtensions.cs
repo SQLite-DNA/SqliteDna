@@ -183,6 +183,10 @@ namespace TestSDSIntergration
                     var command1 = connection.CreateCommand();
                     command1.CommandText = @"SELECT InvoiceDate FROM invoices";
                     Assert.Equal("2023-06-11 15:00:02.874", ((DateTime)command1.ExecuteScalar()!).ToString("yyyy-MM-dd HH:mm:ss.FFF", CultureInfo.InvariantCulture));
+
+                    var command2 = connection.CreateCommand();
+                    command2.CommandText = @"SELECT DateTimeNop(InvoiceDate) FROM invoices";
+                    Assert.Equal("2023-06-11 15:00:02.874", (string)command2.ExecuteScalar()!);
                 }
             }
         }

@@ -57,6 +57,12 @@ namespace SqliteDna.Integration
 
         public static unsafe DateTime ValueDateTime(IntPtr* values, int i)
         {
+            if (sqliteApi.value_type(values[i]) == 2)
+            {
+                double julianDate = ValueDouble(values, i);
+                return new DateTime((long)((julianDate - 1721425.5) * TimeSpan.TicksPerDay), DateTimeKind.Utc);
+            }
+
             return DateTime.Parse(ValueString(values, i)!, CultureInfo.InvariantCulture);
         }
 
