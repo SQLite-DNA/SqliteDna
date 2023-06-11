@@ -172,6 +172,24 @@ namespace TestSDSIntergration
         [Theory]
         [InlineData("TestDNNENE.dll")]
         [InlineData("TestAOT.dll")]
+        public void JulianDB(string extensionFile)
+        {
+            using (var connection = new SQLiteConnection("Data Source=Julian.db;DateTimeFormat=JulianDay"))
+            {
+                connection.Open();
+                connection.LoadExtension(extensionFile);
+
+                {
+                    var command1 = connection.CreateCommand();
+                    command1.CommandText = @"SELECT InvoiceDate FROM invoices";
+                    Assert.Equal("2023-06-11 15:00:02.874", ((DateTime)command1.ExecuteScalar()!).ToString("yyyy-MM-dd HH:mm:ss.FFF", CultureInfo.InvariantCulture));
+                }
+            }
+        }
+
+        [Theory]
+        [InlineData("TestDNNENE.dll")]
+        [InlineData("TestAOT.dll")]
         public void Tables(string extensionFile)
         {
             using (var connection = new SQLiteConnection("Data Source=:memory:"))
