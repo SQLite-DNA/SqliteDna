@@ -85,6 +85,57 @@ You can use int, long, double, string, string?, DateTime, byte[], byte[]? types 
 
 You can throw an exception from your function and it will be converted to an SQLite error.
 
+### Virtual tables
+
+You can write a function generating table data returning IEnumerable. The following function generates a table with a single column Value and two rows: 
+
+```csharp
+[SqliteTableFunction]
+public static IEnumerable<string> MyStringTable()
+{
+    List<string> result = new List<string> { "str1", "str2" };
+    return result;
+}
+```
+
+Then you can invoke it from SQLite:
+
+```sql
+CREATE VIRTUAL TABLE StringTable USING MyStringTable
+```
+
+Returning a custom type from SqliteTableFunction allows you to create a table with a column for each public property of the type:
+
+```csharp
+public record CustomRecord(string Name, int Id);
+
+[SqliteTableFunction]
+public static IEnumerable<CustomRecord> MyRecordTable()
+{
+    List<CustomRecord> result = new List<CustomRecord> { new CustomRecord("n42", 420), new CustomRecord("n50", 5) };
+    return result;
+}
+```
+
+![](Doc/virtual-table.png)
+
+You can accept parameters in SqliteTableFunction:
+
+```csharp
+[SqliteTableFunction]
+public static IEnumerable<CustomRecord> MyRecordParamsTable(string name, int id)
+{
+    List<CustomRecord> result = new List<CustomRecord> { new CustomRecord(name, id) };
+    return result;
+}
+```
+
+And provide parameters from SQLite:
+
+```sql
+CREATE VIRTUAL TABLE RecordParamsTable USING MyRecordParamsTable("Hello, world!", 100)
+```
+
 ### Related projects
 
 * https://observablehq.com/@asg017/introducing-sqlite-loadable-rs
