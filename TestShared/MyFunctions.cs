@@ -6,49 +6,49 @@ namespace TestShared
     {
         public record CustomRecord(string Name, int Id);
 
-        [Function]
+        [SqliteFunction]
         public static int Foo2()
         {
             return 2;
         }
 
-        [Function]
+        [SqliteFunction]
         public static int Foo42()
         {
             return 42;
         }
 
-        [Function]
+        [SqliteFunction]
         public static string FooHello()
         {
             return "Hello";
         }
 
-        [Function]
+        [SqliteFunction]
         public static int MyIntSum(int a1, int a2)
         {
             return a1 + a2;
         }
 
-        [Function]
+        [SqliteFunction]
         public static long MyInt64Sum(long a1, long a2)
         {
             return a1 + a2;
         }
 
-        [Function]
+        [SqliteFunction]
         public static double MyDoubleSum(double a1, double a2)
         {
             return a1 + a2;
         }
 
-        [Function]
+        [SqliteFunction]
         public static string MyConcat(string s1, string s2)
         {
             return s1 + " " + s2;
         }
 
-        [Function]
+        [SqliteFunction]
         public static string? MyNullableConcat(string? s1, string? s2)
         {
             if (s1 == null && s2 == null)
@@ -63,30 +63,30 @@ namespace TestShared
             return s1 + " " + s2;
         }
 
-        [Function]
+        [SqliteFunction]
         public static void Nop()
         {
         }
 
-        [Function]
+        [SqliteFunction]
         public static void IncrementInternalCounter()
         {
             ++internalCounter;
         }
 
-        [Function]
+        [SqliteFunction]
         public static int GetInternalCounter()
         {
             return internalCounter;
         }
 
-        [Function]
+        [SqliteFunction]
         public static DateTime DateTimeNop(DateTime dt)
         {
             return dt;
         }
 
-        [Function]
+        [SqliteFunction]
         public static byte[] ShiftBlob(byte[] bytes)
         {
             for (int i = 0; i < bytes.Length; ++i)
@@ -95,13 +95,13 @@ namespace TestShared
             return bytes;
         }
 
-        [Function]
+        [SqliteFunction]
         public static byte[]? NullableBlob(byte[]? bytes)
         {
             return bytes;
         }
 
-        [Function]
+        [SqliteFunction]
         public static void MyError()
         {
             throw new Exception("My error message");

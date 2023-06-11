@@ -4,13 +4,13 @@ namespace MinimalAOT
 {
     public class MyFunctions
     {
-        [Function]
+        [SqliteFunction]
         public static int Foo2()
         {
             return 2;
         }
 
-        [Function]
+        [SqliteFunction]
         public static int Foo42()
         {
             return 42;

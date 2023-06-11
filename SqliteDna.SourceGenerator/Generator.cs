@@ -197,7 +197,7 @@ namespace SqliteDna.SourceGenerator
                 if (context.Node is MethodDeclarationSyntax methodSyntax)
                 {
                     IMethodSymbol methodSymbol = (context.SemanticModel.GetDeclaredSymbol(methodSyntax) as IMethodSymbol)!;
-                    if (methodSymbol.GetAttributes().Any(a => a.AttributeClass?.ToDisplayString(fullNameFormat) == "SqliteDna.Integration.FunctionAttribute"))
+                    if (methodSymbol.GetAttributes().Any(a => a.AttributeClass?.ToDisplayString(fullNameFormat) == "SqliteDna.Integration.SqliteFunctionAttribute"))
                         Functions.Add(methodSymbol);
                     if (methodSymbol.GetAttributes().Any(a => a.AttributeClass?.ToDisplayString(fullNameFormat) == "SqliteDna.Integration.SqliteTableFunctionAttribute"))
                         TableFunctions.Add(methodSymbol);

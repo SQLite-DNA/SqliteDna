@@ -24,7 +24,7 @@ Create a C# class library .NET 7 project and reference the SqliteDna package (or
 </Project>
 ```
 
-Write your custom function and mark it with the [Function] attribute:
+Write your custom function and mark it with the [SqliteFunction] attribute:
 
 ```csharp
 using SqliteDna.Integration;
@@ -33,13 +33,13 @@ namespace Minimal
 {
     public class MyFunctions
     {
-        [Function]
+        [SqliteFunction]
         public static int Foo2()
         {
             return 2;
         }
 
-        [Function]
+        [SqliteFunction]
         public static int Foo42()
         {
             return 42;

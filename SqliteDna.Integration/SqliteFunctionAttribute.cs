@@ -1,7 +1,7 @@
 ﻿namespace SqliteDna.Integration
 {
     [AttributeUsage(AttributeTargets.Method)]
-    public class FunctionAttribute : Attribute
+    public class SqliteFunctionAttribute : Attribute
     {
     }
 }
