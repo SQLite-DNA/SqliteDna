@@ -216,6 +216,42 @@ namespace TestSDSIntergration
         [Theory]
         [InlineData("TestDNNENE.dll")]
         [InlineData("TestAOT.dll")]
+        public void GuidTextDB(string extensionFile)
+        {
+            using (var connection = new SQLiteConnection("Data Source=GuidText.db;BinaryGuid=false"))
+            {
+                connection.Open();
+                connection.LoadExtension(extensionFile);
+
+                {
+                    var command1 = connection.CreateCommand();
+                    command1.CommandText = @"SELECT guid FROM guids";
+                    Assert.Equal("a2f6cc56-92b8-4c49-a08b-b971bdf2dfb5", ((Guid)command1.ExecuteScalar()!).ToString());
+                }
+            }
+        }
+
+        [Theory]
+        [InlineData("TestDNNENE.dll")]
+        [InlineData("TestAOT.dll")]
+        public void GuidBinaryDB(string extensionFile)
+        {
+            using (var connection = new SQLiteConnection("Data Source=GuidBinary.db;BinaryGuid=true"))
+            {
+                connection.Open();
+                connection.LoadExtension(extensionFile);
+
+                {
+                    var command1 = connection.CreateCommand();
+                    command1.CommandText = @"SELECT guid FROM guids";
+                    Assert.Equal("172173d2-dbf3-40bb-8cd8-d82b778dc96f", ((Guid)command1.ExecuteScalar()!).ToString());
+                }
+            }
+        }
+
+        [Theory]
+        [InlineData("TestDNNENE.dll")]
+        [InlineData("TestAOT.dll")]
         public void Tables(string extensionFile)
         {
             using (var connection = new SQLiteConnection("Data Source=:memory:"))
