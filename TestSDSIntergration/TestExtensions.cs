@@ -194,6 +194,28 @@ namespace TestSDSIntergration
         [Theory]
         [InlineData("TestDNNENE.dll")]
         [InlineData("TestAOT.dll")]
+        public void UnixEpochDB(string extensionFile)
+        {
+            using (var connection = new SQLiteConnection("Data Source=UnixEpoch.db;DateTimeFormat=UnixEpoch"))
+            {
+                connection.Open();
+                connection.LoadExtension(extensionFile);
+
+                {
+                    var command1 = connection.CreateCommand();
+                    command1.CommandText = @"SELECT InvoiceDate FROM invoices";
+                    Assert.Equal("2023-06-17 14:15:00", ((DateTime)command1.ExecuteScalar()!).ToString("yyyy-MM-dd HH:mm:ss.FFF", CultureInfo.InvariantCulture));
+
+                    var command2 = connection.CreateCommand();
+                    command2.CommandText = @"SELECT DateTimeNop(InvoiceDate) FROM invoices";
+                    Assert.Equal("2023-06-17 14:15:00", (string)command2.ExecuteScalar()!);
+                }
+            }
+        }
+
+        [Theory]
+        [InlineData("TestDNNENE.dll")]
+        [InlineData("TestAOT.dll")]
         public void Tables(string extensionFile)
         {
             using (var connection = new SQLiteConnection("Data Source=:memory:"))

@@ -10,6 +10,12 @@ namespace SqliteDna.Integration
         public const int SQLITE_OK = 0;
         public const int SQLITE_ERROR = 1;
 
+        public const int SQLITE_INTEGER = 1;
+        public const int SQLITE_FLOAT = 2;
+        public const int SQLITE_TEXT = 3;
+        public const int SQLITE_BLOB = 4;
+        public const int SQLITE_NULL = 5;
+
         public static IntPtr SQLITE_STATIC = new IntPtr(0);
         public static IntPtr SQLITE_TRANSIENT = new IntPtr(-1);
 
@@ -57,13 +63,19 @@ namespace SqliteDna.Integration
 
         public static unsafe DateTime ValueDateTime(IntPtr* values, int i)
         {
-            if (sqliteApi.value_type(values[i]) == 2)
+            switch (sqliteApi.value_type(values[i]))
             {
-                double julianDate = ValueDouble(values, i);
-                return new DateTime((long)((julianDate - 1721425.5) * TimeSpan.TicksPerDay), DateTimeKind.Utc);
-            }
+                case SQLITE_INTEGER:
+                    long unixDate = ValueInt64(values, i);
+                    return DateTime.UnixEpoch.AddSeconds(unixDate);
 
-            return DateTime.Parse(ValueString(values, i)!, CultureInfo.InvariantCulture);
+                case SQLITE_FLOAT:
+                    double julianDate = ValueDouble(values, i);
+                    return new DateTime((long)((julianDate - 1721425.5) * TimeSpan.TicksPerDay), DateTimeKind.Utc);
+
+                default:
+                    return DateTime.Parse(ValueString(values, i)!, CultureInfo.InvariantCulture);
+            }
         }
 
         public static unsafe string? ValueString(IntPtr* values, int i)
