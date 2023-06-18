@@ -39,6 +39,16 @@ namespace TestCppIntegration
 			NorthwindDB("TestDNNENE.dll");
 		}
 
+		TEST_METHOD(GuidTextDBAOT)
+		{
+			GuidTextDB("TestAOT.dll");
+		}
+
+		TEST_METHOD(GuidTextDBDNNE)
+		{
+			GuidTextDB("TestDNNENE.dll");
+		}
+
 		TEST_METHOD(TablesAOT)
 		{
 			Tables("TestAOT.dll");
@@ -186,6 +196,22 @@ namespace TestCppIntegration
 				SQLite::Statement query2(db, "SELECT NullableBlob(NULL)");
 				query2.executeStep();
 				Assert::IsTrue(query2.getColumn(0).isNull());
+			}
+		}
+
+		void GuidTextDB(const std::string& extensionFile)
+		{
+			SQLite::Database db("GuidText.db");
+			db.loadExtension(extensionFile.c_str(), nullptr);
+
+			{
+				SQLite::Statement query1(db, "SELECT guid FROM guids");
+				query1.executeStep();
+				Assert::AreEqual(std::string("a2f6cc56-92b8-4c49-a08b-b971bdf2dfb5"), query1.getColumn(0).getString());
+
+				SQLite::Statement query2(db, "SELECT GuidNop(guid) FROM guids");
+				query2.executeStep();
+				Assert::AreEqual(std::string("a2f6cc56-92b8-4c49-a08b-b971bdf2dfb5"), query2.getColumn(0).getString());
 			}
 		}
 
