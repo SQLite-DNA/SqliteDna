@@ -87,6 +87,12 @@ namespace TestShared
         }
 
         [SqliteFunction]
+        public static Guid GuidNop(Guid g)
+        {
+            return g;
+        }
+
+        [SqliteFunction]
         public static byte[] ShiftBlob(byte[] bytes)
         {
             for (int i = 0; i < bytes.Length; ++i)

@@ -227,6 +227,10 @@ namespace TestSDSIntergration
                     var command1 = connection.CreateCommand();
                     command1.CommandText = @"SELECT guid FROM guids";
                     Assert.Equal("a2f6cc56-92b8-4c49-a08b-b971bdf2dfb5", ((Guid)command1.ExecuteScalar()!).ToString());
+
+                    var command2 = connection.CreateCommand();
+                    command2.CommandText = @"SELECT GuidNop(guid) FROM guids";
+                    Assert.Equal("a2f6cc56-92b8-4c49-a08b-b971bdf2dfb5", (string)command2.ExecuteScalar()!);
                 }
             }
         }
@@ -245,6 +249,10 @@ namespace TestSDSIntergration
                     var command1 = connection.CreateCommand();
                     command1.CommandText = @"SELECT guid FROM guids";
                     Assert.Equal("172173d2-dbf3-40bb-8cd8-d82b778dc96f", ((Guid)command1.ExecuteScalar()!).ToString());
+
+                    var command2 = connection.CreateCommand();
+                    command2.CommandText = @"SELECT GuidNop(guid) FROM guids";
+                    Assert.Equal("172173d2-dbf3-40bb-8cd8-d82b778dc96f", (string)command2.ExecuteScalar()!);
                 }
             }
         }

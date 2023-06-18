@@ -78,6 +78,18 @@ namespace SqliteDna.Integration
             }
         }
 
+        public static unsafe Guid ValueGuid(IntPtr* values, int i)
+        {
+            switch (sqliteApi.value_type(values[i]))
+            {
+                case SQLITE_BLOB:
+                    return new Guid(ValueBlob(values, i)!);
+
+                default:
+                    return new Guid(ValueString(values, i)!);
+            }
+        }
+
         public static unsafe string? ValueString(IntPtr* values, int i)
         {
             byte* text = sqliteApi.value_text(values[i]);
@@ -154,6 +166,11 @@ namespace SqliteDna.Integration
         public static unsafe void ResultDateTime(IntPtr context, DateTime dt)
         {
             ResultString(context, dt.ToString("yyyy-MM-dd HH:mm:ss.FFF", CultureInfo.InvariantCulture));
+        }
+
+        public static unsafe void ResultGuid(IntPtr context, Guid g)
+        {
+            ResultString(context, g.ToString());
         }
 
         public static unsafe void ResultBlob(IntPtr context, byte[]? bytes)

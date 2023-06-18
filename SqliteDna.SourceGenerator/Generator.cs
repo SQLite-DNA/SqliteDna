@@ -184,6 +184,9 @@ namespace SqliteDna.SourceGenerator
                     return "Blob";
             }
 
+            if (Util.GetFullTypeName(typeSymbol) == "System.Guid")
+                return "Guid";
+
             return null;
         }
 
