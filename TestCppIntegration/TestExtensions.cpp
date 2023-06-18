@@ -49,6 +49,16 @@ namespace TestCppIntegration
 			GuidTextDB("TestDNNENE.dll");
 		}
 
+		TEST_METHOD(GuidBinaryDBAOT)
+		{
+			GuidBinaryDB("TestAOT.dll");
+		}
+
+		TEST_METHOD(GuidBinaryDBDNNE)
+		{
+			GuidBinaryDB("TestDNNENE.dll");
+		}
+
 		TEST_METHOD(TablesAOT)
 		{
 			Tables("TestAOT.dll");
@@ -212,6 +222,18 @@ namespace TestCppIntegration
 				SQLite::Statement query2(db, "SELECT GuidNop(guid) FROM guids");
 				query2.executeStep();
 				Assert::AreEqual(std::string("a2f6cc56-92b8-4c49-a08b-b971bdf2dfb5"), query2.getColumn(0).getString());
+			}
+		}
+
+		void GuidBinaryDB(const std::string& extensionFile)
+		{
+			SQLite::Database db("GuidBinary.db");
+			db.loadExtension(extensionFile.c_str(), nullptr);
+
+			{
+				SQLite::Statement query2(db, "SELECT GuidNop(guid) FROM guids");
+				query2.executeStep();
+				Assert::AreEqual(std::string("172173d2-dbf3-40bb-8cd8-d82b778dc96f"), query2.getColumn(0).getString());
 			}
 		}
 
