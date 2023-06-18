@@ -81,7 +81,11 @@ Publishing the AOT project will produce the single [ProjectName].dll native exte
 
 ### Features
 
-You can use int, long, double, string, string?, DateTime, byte[], byte[]? types for your function parameters and return value. They will be automatically converted to corresponding SQLite types.
+You can use int, long, double, string, string?, DateTime, Guid, byte[], byte[]? types for your function parameters and return value. They will be automatically converted to corresponding SQLite types.
+
+DateTime can be constructed from ISO-8601, Julian day, and unix timestamp formats. Returned DateTime is converted to an SQLite string.
+
+Guid can be constructed from text and binary formats. Returned Guid is converted to an SQLite string.
 
 You can throw an exception from your function and it will be converted to an SQLite error.
 
