@@ -6,8 +6,8 @@ namespace TestSDSIntegration
     public class TestExtensions
     {
         [Theory]
-        [InlineData("TestDNNENE.dll")]
-        [InlineData("TestAOT.dll")]
+        [InlineData("TestDNNENE")]
+        [InlineData("TestAOT")]
         public void Functions(string extensionFile)
         {
             using (var connection = new SQLiteConnection("Data Source=:memory:"))
@@ -94,8 +94,8 @@ namespace TestSDSIntegration
         }
 
         [Theory]
-        [InlineData("TestDNNENE.dll")]
-        [InlineData("TestAOT.dll")]
+        [InlineData("TestDNNENE")]
+        [InlineData("TestAOT")]
         public void ChinookDB(string extensionFile)
         {
             using (var connection = new SQLiteConnection("Data Source=chinook.db"))
@@ -116,8 +116,8 @@ namespace TestSDSIntegration
         }
 
         [Theory]
-        [InlineData("TestDNNENE.dll")]
-        [InlineData("TestAOT.dll")]
+        [InlineData("TestDNNENE")]
+        [InlineData("TestAOT")]
         public void NorthwindDB(string extensionFile)
         {
             using (var connection = new SQLiteConnection("Data Source=northwind.db"))
@@ -170,8 +170,8 @@ namespace TestSDSIntegration
         }
 
         [Theory]
-        [InlineData("TestDNNENE.dll")]
-        [InlineData("TestAOT.dll")]
+        [InlineData("TestDNNENE")]
+        [InlineData("TestAOT")]
         public void JulianDB(string extensionFile)
         {
             using (var connection = new SQLiteConnection("Data Source=Julian.db;DateTimeFormat=JulianDay"))
@@ -192,8 +192,8 @@ namespace TestSDSIntegration
         }
 
         [Theory]
-        [InlineData("TestDNNENE.dll")]
-        [InlineData("TestAOT.dll")]
+        [InlineData("TestDNNENE")]
+        [InlineData("TestAOT")]
         public void UnixEpochDB(string extensionFile)
         {
             using (var connection = new SQLiteConnection("Data Source=UnixEpoch.db;DateTimeFormat=UnixEpoch"))
@@ -214,8 +214,8 @@ namespace TestSDSIntegration
         }
 
         [Theory]
-        [InlineData("TestDNNENE.dll")]
-        [InlineData("TestAOT.dll")]
+        [InlineData("TestDNNENE")]
+        [InlineData("TestAOT")]
         public void GuidTextDB(string extensionFile)
         {
             using (var connection = new SQLiteConnection("Data Source=GuidText.db;BinaryGuid=false"))
@@ -236,8 +236,8 @@ namespace TestSDSIntegration
         }
 
         [Theory]
-        [InlineData("TestDNNENE.dll")]
-        [InlineData("TestAOT.dll")]
+        [InlineData("TestDNNENE")]
+        [InlineData("TestAOT")]
         public void GuidBinaryDB(string extensionFile)
         {
             using (var connection = new SQLiteConnection("Data Source=GuidBinary.db;BinaryGuid=true"))
@@ -258,8 +258,8 @@ namespace TestSDSIntegration
         }
 
         [Theory]
-        [InlineData("TestDNNENE.dll")]
-        [InlineData("TestAOT.dll")]
+        [InlineData("TestDNNENE")]
+        [InlineData("TestAOT")]
         public void Tables(string extensionFile)
         {
             using (var connection = new SQLiteConnection("Data Source=:memory:"))

@@ -5,8 +5,8 @@ namespace TestIntegration
     public class TestExtensions
     {
         [Theory]
-        [InlineData("TestDNNENE.dll")]
-        [InlineData("TestAOT.dll")]
+        [InlineData("TestDNNENE")]
+        [InlineData("TestAOT")]
         public void Functions(string extensionFile)
         {
             using (var connection = new SqliteConnection("Data Source=:memory:"))
@@ -93,8 +93,8 @@ namespace TestIntegration
         }
 
         [Theory]
-        [InlineData("TestDNNENE.dll")]
-        [InlineData("TestAOT.dll")]
+        [InlineData("TestDNNENE")]
+        [InlineData("TestAOT")]
         public void ChinookDB(string extensionFile)
         {
             using (var connection = new SqliteConnection("Data Source=chinook.db"))
@@ -115,8 +115,8 @@ namespace TestIntegration
         }
 
         [Theory]
-        [InlineData("TestDNNENE.dll")]
-        [InlineData("TestAOT.dll")]
+        [InlineData("TestDNNENE")]
+        [InlineData("TestAOT")]
         public void NorthwindDB(string extensionFile)
         {
             using (var connection = new SqliteConnection("Data Source=northwind.db"))
@@ -169,8 +169,8 @@ namespace TestIntegration
         }
 
         [Theory]
-        [InlineData("TestDNNENE.dll")]
-        [InlineData("TestAOT.dll")]
+        [InlineData("TestDNNENE")]
+        [InlineData("TestAOT")]
         public void Tables(string extensionFile)
         {
             using (var connection = new SqliteConnection("Data Source=:memory:"))
