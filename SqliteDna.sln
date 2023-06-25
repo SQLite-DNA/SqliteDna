@@ -24,7 +24,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestCppIntegration", "TestC
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestGenerator", "TestGenerator\TestGenerator.csproj", "{2A8E72AE-9014-444B-97B9-D81BD001DA69}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestSDSIntegration", "TestSDSIntegration\TestSDSIntegration.csproj", "{34FE1EEA-A6A7-4BFE-A63B-88EEDE9898E7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestSDSIntegration", "TestSDSIntegration\TestSDSIntegration.csproj", "{34FE1EEA-A6A7-4BFE-A63B-88EEDE9898E7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -115,7 +115,6 @@ Global
 		{4A54EA15-260F-4D2A-AC19-72BBC2A188C7}.Debug|x86.ActiveCfg = Debug|Win32
 		{4A54EA15-260F-4D2A-AC19-72BBC2A188C7}.Debug|x86.Build.0 = Debug|Win32
 		{4A54EA15-260F-4D2A-AC19-72BBC2A188C7}.Release|Any CPU.ActiveCfg = Release|x64
-		{4A54EA15-260F-4D2A-AC19-72BBC2A188C7}.Release|Any CPU.Build.0 = Release|x64
 		{4A54EA15-260F-4D2A-AC19-72BBC2A188C7}.Release|x64.ActiveCfg = Release|x64
 		{4A54EA15-260F-4D2A-AC19-72BBC2A188C7}.Release|x64.Build.0 = Release|x64
 		{4A54EA15-260F-4D2A-AC19-72BBC2A188C7}.Release|x86.ActiveCfg = Release|Win32
