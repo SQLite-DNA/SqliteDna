@@ -6,9 +6,13 @@
 		<Nullable>enable</Nullable>
 
 		<PublishAOT>true</PublishAOT>
-		<RuntimeIdentifier>win-x64</RuntimeIdentifier>
 		
 		<EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
+	</PropertyGroup>
+
+	<PropertyGroup>
+		<RuntimeIdentifier Condition=" '$(OS)' == 'Windows_NT' ">win-x64</RuntimeIdentifier>
+		<RuntimeIdentifier Condition=" '$(OS)' == 'Unix' ">linux-x64</RuntimeIdentifier>
 	</PropertyGroup>
 
 	<ItemGroup>
