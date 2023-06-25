@@ -20,4 +20,11 @@
 
 	<Import Project="..\Package\build\SqliteDna.props" />
 
+	<Target Name="SetNoBuild">
+		<PropertyGroup>
+			<NoBuild>true</NoBuild>
+		</PropertyGroup>
+	</Target>
+	<Target Name="PublishAfterBuild" AfterTargets="AfterBuild" DependsOnTargets="SetNoBuild;Publish" />
+
 </Project>
