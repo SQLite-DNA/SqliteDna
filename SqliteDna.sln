@@ -13,7 +13,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestDNNE", "TestDNNE\TestDN
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestAOT", "TestAOT\TestAOT.csproj", "{0EBDBCDE-74D3-493A-8C74-8943A6F6AC45}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestIntergration", "TestIntergration\TestIntergration.csproj", "{3EB3984B-A054-41DF-8729-4F1E19A2318C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestIntegration", "TestIntegration\TestIntegration.csproj", "{3EB3984B-A054-41DF-8729-4F1E19A2318C}"
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "TestShared", "TestShared\TestShared.shproj", "{74CBC733-AFF2-4796-AD48-499AAEB11D7A}"
 EndProject
@@ -24,7 +24,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestCppIntegration", "TestC
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestGenerator", "TestGenerator\TestGenerator.csproj", "{2A8E72AE-9014-444B-97B9-D81BD001DA69}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestSDSIntergration", "TestSDSIntergration\TestSDSIntergration.csproj", "{34FE1EEA-A6A7-4BFE-A63B-88EEDE9898E7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestSDSIntegration", "TestSDSIntegration\TestSDSIntegration.csproj", "{34FE1EEA-A6A7-4BFE-A63B-88EEDE9898E7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -1,7 +1,7 @@
 using System.Data.SQLite;
 using System.Globalization;
 
-namespace TestSDSIntergration
+namespace TestSDSIntegration
 {
     public class TestExtensions
     {

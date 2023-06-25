@@ -1,6 +1,6 @@
 using Microsoft.Data.Sqlite;
 
-namespace TestIntergration
+namespace TestIntegration
 {
     public class TestExtensions
     {
