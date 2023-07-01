@@ -13,7 +13,7 @@ namespace TestSDSIntegration
             using (var connection = new SQLiteConnection("Data Source=:memory:"))
             {
                 connection.Open();
-                connection.LoadExtension(extensionFile);
+                connection.LoadExtension(ExtensionPath(extensionFile));
                 {
                     var command = connection.CreateCommand();
                     command.CommandText = @"SELECT Foo2()";
@@ -101,7 +101,7 @@ namespace TestSDSIntegration
             using (var connection = new SQLiteConnection("Data Source=chinook.db"))
             {
                 connection.Open();
-                connection.LoadExtension(extensionFile);
+                connection.LoadExtension(ExtensionPath(extensionFile));
 
                 {
                     var command1 = connection.CreateCommand();
@@ -123,7 +123,7 @@ namespace TestSDSIntegration
             using (var connection = new SQLiteConnection("Data Source=northwind.db"))
             {
                 connection.Open();
-                connection.LoadExtension(extensionFile);
+                connection.LoadExtension(ExtensionPath(extensionFile));
 
                 {
                     var command1 = connection.CreateCommand();
@@ -177,7 +177,7 @@ namespace TestSDSIntegration
             using (var connection = new SQLiteConnection("Data Source=Julian.db;DateTimeFormat=JulianDay"))
             {
                 connection.Open();
-                connection.LoadExtension(extensionFile);
+                connection.LoadExtension(ExtensionPath(extensionFile));
 
                 {
                     var command1 = connection.CreateCommand();
@@ -199,7 +199,7 @@ namespace TestSDSIntegration
             using (var connection = new SQLiteConnection("Data Source=UnixEpoch.db;DateTimeFormat=UnixEpoch"))
             {
                 connection.Open();
-                connection.LoadExtension(extensionFile);
+                connection.LoadExtension(ExtensionPath(extensionFile));
 
                 {
                     var command1 = connection.CreateCommand();
@@ -221,7 +221,7 @@ namespace TestSDSIntegration
             using (var connection = new SQLiteConnection("Data Source=GuidText.db;BinaryGuid=false"))
             {
                 connection.Open();
-                connection.LoadExtension(extensionFile);
+                connection.LoadExtension(ExtensionPath(extensionFile));
 
                 {
                     var command1 = connection.CreateCommand();
@@ -243,7 +243,7 @@ namespace TestSDSIntegration
             using (var connection = new SQLiteConnection("Data Source=GuidBinary.db;BinaryGuid=true"))
             {
                 connection.Open();
-                connection.LoadExtension(extensionFile);
+                connection.LoadExtension(ExtensionPath(extensionFile));
 
                 {
                     var command1 = connection.CreateCommand();
@@ -265,7 +265,7 @@ namespace TestSDSIntegration
             using (var connection = new SQLiteConnection("Data Source=:memory:"))
             {
                 connection.Open();
-                connection.LoadExtension(extensionFile);
+                connection.LoadExtension(ExtensionPath(extensionFile));
                 {
                     var command1 = connection.CreateCommand();
                     command1.CommandText = @"CREATE VIRTUAL TABLE LongTable USING MyLongTable";
@@ -379,6 +379,11 @@ namespace TestSDSIntegration
                     }
                 }
             }
+        }
+
+        private static string ExtensionPath(string extensionFile)
+        {
+            return Path.Combine(".", extensionFile);
         }
     }
 }

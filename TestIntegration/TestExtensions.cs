@@ -12,7 +12,7 @@ namespace TestIntegration
             using (var connection = new SqliteConnection("Data Source=:memory:"))
             {
                 connection.Open();
-                connection.LoadExtension(extensionFile);
+                connection.LoadExtension(ExtensionPath(extensionFile));
                 {
                     var command = connection.CreateCommand();
                     command.CommandText = @"SELECT Foo2()";
@@ -100,7 +100,7 @@ namespace TestIntegration
             using (var connection = new SqliteConnection("Data Source=chinook.db"))
             {
                 connection.Open();
-                connection.LoadExtension(extensionFile);
+                connection.LoadExtension(ExtensionPath(extensionFile));
 
                 {
                     var command1 = connection.CreateCommand();
@@ -122,7 +122,7 @@ namespace TestIntegration
             using (var connection = new SqliteConnection("Data Source=northwind.db"))
             {
                 connection.Open();
-                connection.LoadExtension(extensionFile);
+                connection.LoadExtension(ExtensionPath(extensionFile));
 
                 {
                     var command1 = connection.CreateCommand();
@@ -176,7 +176,7 @@ namespace TestIntegration
             using (var connection = new SqliteConnection("Data Source=:memory:"))
             {
                 connection.Open();
-                connection.LoadExtension(extensionFile);
+                connection.LoadExtension(ExtensionPath(extensionFile));
                 {
                     var command1 = connection.CreateCommand();
                     command1.CommandText = @"CREATE VIRTUAL TABLE LongTable USING MyLongTable";
@@ -290,6 +290,11 @@ namespace TestIntegration
                     }
                 }
             }
+        }
+
+        private static string ExtensionPath(string extensionFile)
+        {
+            return Path.Combine(".", extensionFile);
         }
     }
 }
