@@ -10,6 +10,11 @@
 		<EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
 	</PropertyGroup>
 
+	<PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+		<InvariantGlobalization>true</InvariantGlobalization>
+		<DebuggerSupport>false</DebuggerSupport>
+	</PropertyGroup>
+
 	<PropertyGroup>
 		<RuntimeIdentifier Condition=" '$(OS)' == 'Windows_NT' ">win-x64</RuntimeIdentifier>
 		<RuntimeIdentifier Condition=" '$(OS)' == 'Unix' ">linux-x64</RuntimeIdentifier>
