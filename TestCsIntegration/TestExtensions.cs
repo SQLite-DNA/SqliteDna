@@ -1,12 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using SqliteDna.Testing;
+using System.Globalization;
 
 namespace TestCsIntegration
 {
-    internal class TestExtensions
+    public class TestExtensions
     {
+        [Theory]
+        [MemberData(nameof(ConnectionData))]
+        public void Functions(string extensionFile, SqliteProvider provider)
+        {
+            using (var connection = SqliteConnection.Create("Data Source=:memory:", extensionFile, provider))
+            {
+
+            }
+        }
+
+        public static IEnumerable<object[]> ConnectionData => SqliteConnection.GenerateConnectionParameters(new string[] { "TestDNNENE", "TestAOT" });
     }
 }
