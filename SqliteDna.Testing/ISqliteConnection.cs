@@ -6,5 +6,6 @@ namespace SqliteDna.Testing
     {
         T ExecuteScalar<T>(string commandText);
         int ExecuteNonQuery(string commandText);
+        ISqliteDataReader ExecuteReader(string commandText);
     }
 }

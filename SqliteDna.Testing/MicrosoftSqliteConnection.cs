@@ -52,5 +52,12 @@
             command.CommandText = commandText;
             return command.ExecuteNonQuery();
         }
+
+        public ISqliteDataReader ExecuteReader(string commandText)
+        {
+            var command = connection.CreateCommand();
+            command.CommandText = commandText;
+            return new MicrosoftSqliteDataReader(command.ExecuteReader());
+        }
     }
 }

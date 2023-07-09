@@ -137,6 +137,26 @@ namespace TestCsIntegration
             }
         }
 
+        [Theory, MemberData(nameof(ConnectionData))]
+        public void Tables(string extensionFile, SqliteProvider provider)
+        {
+            using (var connection = SqliteConnection.Create("Data Source=:memory:", extensionFile, provider))
+            {
+                Assert.Equal(0, connection.ExecuteNonQuery("CREATE VIRTUAL TABLE LongTable USING MyLongTable"));
+                Assert.Equal(3, connection.ExecuteScalar<long>("SELECT COUNT(*) FROM LongTable"));
+                using (var reader = connection.ExecuteReader("SELECT * FROM LongTable"))
+                {
+                    Assert.True(reader.Read());
+                    Assert.Equal(1, reader.GetItem<long>("Value"));
+                    Assert.True(reader.Read());
+                    Assert.Equal(5, reader.GetItem<long>("Value"));
+                    Assert.True(reader.Read());
+                    Assert.Equal(17, reader.GetItem<long>("Value"));
+                    Assert.False(reader.Read());
+                }
+            }
+        }
+
         public static IEnumerable<object[]> ConnectionData => SqliteConnection.GenerateConnectionParameters(new string[] { "TestDNNENE", "TestAOT" });
 
         public static IEnumerable<object[]> SystemConnectionData => SqliteConnection.GenerateConnectionParameters(new string[] { "TestDNNENE", "TestAOT" }, SqliteProvider.System);
