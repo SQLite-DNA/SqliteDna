@@ -96,6 +96,49 @@ namespace TestCsIntegration
             }
         }
 
+        [Theory, MemberData(nameof(SystemConnectionData))]
+        public void JulianDB(string extensionFile, SqliteProvider provider)
+        {
+            using (var connection = SqliteConnection.Create("Data Source=Julian.db;DateTimeFormat=JulianDay", extensionFile, provider))
+            {
+                Assert.Equal("2023-06-11 15:00:02.874", connection.ExecuteScalar<DateTime>("SELECT InvoiceDate FROM invoices").ToString("yyyy-MM-dd HH:mm:ss.FFF", CultureInfo.InvariantCulture));
+                Assert.Equal("2023-06-11 15:00:02.874", connection.ExecuteScalar<string>("SELECT DateTimeNop(InvoiceDate) FROM invoices"));
+            }
+        }
+
+
+        [Theory, MemberData(nameof(SystemConnectionData))]
+        public void UnixEpochDB(string extensionFile, SqliteProvider provider)
+        {
+            using (var connection = SqliteConnection.Create("Data Source=UnixEpoch.db;DateTimeFormat=UnixEpoch", extensionFile, provider))
+            {
+                Assert.Equal("2023-06-17 14:15:00", connection.ExecuteScalar<DateTime>("SELECT InvoiceDate FROM invoices").ToString("yyyy-MM-dd HH:mm:ss.FFF", CultureInfo.InvariantCulture));
+                Assert.Equal("2023-06-17 14:15:00", connection.ExecuteScalar<string>("SELECT DateTimeNop(InvoiceDate) FROM invoices"));
+            }
+        }
+
+        [Theory, MemberData(nameof(SystemConnectionData))]
+        public void GuidTextDB(string extensionFile, SqliteProvider provider)
+        {
+            using (var connection = SqliteConnection.Create("Data Source=GuidText.db;BinaryGuid=false", extensionFile, provider))
+            {
+                Assert.Equal("a2f6cc56-92b8-4c49-a08b-b971bdf2dfb5", connection.ExecuteScalar<Guid>("SELECT guid FROM guids").ToString());
+                Assert.Equal("a2f6cc56-92b8-4c49-a08b-b971bdf2dfb5", connection.ExecuteScalar<string>("SELECT GuidNop(guid) FROM guids"));
+            }
+        }
+
+        [Theory, MemberData(nameof(SystemConnectionData))]
+        public void GuidBinaryDB(string extensionFile, SqliteProvider provider)
+        {
+            using (var connection = SqliteConnection.Create("Data Source=GuidBinary.db;BinaryGuid=true", extensionFile, provider))
+            {
+                Assert.Equal("172173d2-dbf3-40bb-8cd8-d82b778dc96f", connection.ExecuteScalar<Guid>("SELECT guid FROM guids").ToString());
+                Assert.Equal("172173d2-dbf3-40bb-8cd8-d82b778dc96f", connection.ExecuteScalar<string>("SELECT GuidNop(guid) FROM guids"));
+            }
+        }
+
         public static IEnumerable<object[]> ConnectionData => SqliteConnection.GenerateConnectionParameters(new string[] { "TestDNNENE", "TestAOT" });
+
+        public static IEnumerable<object[]> SystemConnectionData => SqliteConnection.GenerateConnectionParameters(new string[] { "TestDNNENE", "TestAOT" }, SqliteProvider.System);
     }
 }

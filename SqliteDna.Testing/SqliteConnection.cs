@@ -30,5 +30,14 @@ namespace SqliteDna.Testing
 
             return result;
         }
+
+        public static IEnumerable<object[]> GenerateConnectionParameters(IEnumerable<string> extensionFiles, SqliteProvider provider)
+        {
+            List<object[]> result = new List<object[]>();
+            foreach (string extensionFile in extensionFiles)
+                result.Add(new object[] { extensionFile, provider });
+
+            return result;
+        }
     }
 }
