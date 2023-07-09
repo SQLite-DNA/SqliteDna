@@ -69,6 +69,12 @@ namespace TestShared
         }
 
         [SqliteFunction]
+        public static void ResetInternalCounter()
+        {
+            internalCounter = 0;
+        }
+
+        [SqliteFunction]
         public static void IncrementInternalCounter()
         {
             ++internalCounter;

@@ -4,6 +4,7 @@ namespace SqliteDna.Testing
 {
     public interface ISqliteConnection : IDisposable
     {
-        T ExecuteCommand<T>(string commandText);
+        T ExecuteScalar<T>(string commandText);
+        int ExecuteNonQuery(string commandText);
     }
 }

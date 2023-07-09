@@ -39,11 +39,18 @@
             System.GC.SuppressFinalize(this);
         }
 
-        public T ExecuteCommand<T>(string commandText)
+        public T ExecuteScalar<T>(string commandText)
         {
             var command = connection.CreateCommand();
             command.CommandText = commandText;
             return (T)command.ExecuteScalar();
+        }
+
+        public int ExecuteNonQuery(string commandText)
+        {
+            var command = connection.CreateCommand();
+            command.CommandText = commandText;
+            return command.ExecuteNonQuery();
         }
     }
 }
