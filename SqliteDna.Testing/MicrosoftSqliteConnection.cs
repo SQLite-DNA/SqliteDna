@@ -38,5 +38,12 @@
             Dispose(disposing: true);
             System.GC.SuppressFinalize(this);
         }
+
+        public T ExecuteCommand<T>(string commandText)
+        {
+            var command = connection.CreateCommand();
+            command.CommandText = commandText;
+            return (T)command.ExecuteScalar();
+        }
     }
 }
