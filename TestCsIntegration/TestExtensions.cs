@@ -142,17 +142,79 @@ namespace TestCsIntegration
         {
             using (var connection = SqliteConnection.Create("Data Source=:memory:", extensionFile, provider))
             {
-                Assert.Equal(0, connection.ExecuteNonQuery("CREATE VIRTUAL TABLE LongTable USING MyLongTable"));
-                Assert.Equal(3, connection.ExecuteScalar<long>("SELECT COUNT(*) FROM LongTable"));
-                using (var reader = connection.ExecuteReader("SELECT * FROM LongTable"))
                 {
-                    Assert.True(reader.Read());
-                    Assert.Equal(1, reader.GetItem<long>("Value"));
-                    Assert.True(reader.Read());
-                    Assert.Equal(5, reader.GetItem<long>("Value"));
-                    Assert.True(reader.Read());
-                    Assert.Equal(17, reader.GetItem<long>("Value"));
-                    Assert.False(reader.Read());
+                    Assert.Equal(0, connection.ExecuteNonQuery("CREATE VIRTUAL TABLE LongTable USING MyLongTable"));
+                    Assert.Equal(3, connection.ExecuteScalar<long>("SELECT COUNT(*) FROM LongTable"));
+                    using (var reader = connection.ExecuteReader("SELECT * FROM LongTable"))
+                    {
+                        Assert.True(reader.Read());
+                        Assert.Equal(1, reader.GetItem<long>("Value"));
+                        Assert.True(reader.Read());
+                        Assert.Equal(5, reader.GetItem<long>("Value"));
+                        Assert.True(reader.Read());
+                        Assert.Equal(17, reader.GetItem<long>("Value"));
+                        Assert.False(reader.Read());
+                    }
+                }
+                {
+                    Assert.Equal(0, connection.ExecuteNonQuery("CREATE VIRTUAL TABLE StringTable USING MyStringTable"));
+                    using (var reader = connection.ExecuteReader("SELECT * FROM StringTable"))
+                    {
+                        Assert.True(reader.Read());
+                        Assert.Equal("str1", reader.GetItem<string>("Value"));
+                        Assert.True(reader.Read());
+                        Assert.Equal("str2", reader.GetItem<string>("Value"));
+                    }
+                }
+                {
+                    Assert.Equal(0, connection.ExecuteNonQuery("CREATE VIRTUAL TABLE CustomStringTable USING MyCustomStringTable"));
+                    using (var reader = connection.ExecuteReader("SELECT * FROM CustomStringTable"))
+                    {
+                        Assert.True(reader.Read());
+                        Assert.Equal("MyCustomString", reader.GetItem<string>("Value"));
+                    }
+                }
+                {
+                    Assert.Equal(0, connection.ExecuteNonQuery("CREATE VIRTUAL TABLE RecordTable USING MyRecordTable"));
+                    using (var reader = connection.ExecuteReader("SELECT Name, Id FROM RecordTable"))
+                    {
+                        Assert.True(reader.Read());
+                        Assert.Equal("n42", reader.GetItem<string>("Name"));
+                        Assert.Equal(420, reader.GetItem<long>("Id"));
+                        Assert.True(reader.Read());
+                        Assert.Equal("n50", reader.GetItem<string>("Name"));
+                        Assert.Equal(5, reader.GetItem<long>("Id"));
+                    }
+                }
+                {
+                    Assert.Equal(0, connection.ExecuteNonQuery("CREATE VIRTUAL TABLE RecordParamsTable USING MyRecordParamsTable(name1, 100)"));
+                    using (var reader = connection.ExecuteReader("SELECT * FROM RecordParamsTable"))
+                    {
+                        Assert.True(reader.Read());
+                        Assert.Equal("name1", reader.GetItem<string>("Name"));
+                        Assert.Equal(100, reader.GetItem<long>("Id"));
+                        Assert.False(reader.Read());
+                    }
+                }
+                {
+                    Assert.Equal(0, connection.ExecuteNonQuery(@"CREATE VIRTUAL TABLE RecordParamsTable2 USING MyRecordParamsTable(""Hello, world!"", 100)"));
+                    using (var reader = connection.ExecuteReader("SELECT * FROM RecordParamsTable2"))
+                    {
+                        Assert.True(reader.Read());
+                        Assert.Equal("Hello, world!", reader.GetItem<string>("Name"));
+                        Assert.Equal(100, reader.GetItem<long>("Id"));
+                        Assert.False(reader.Read());
+                    }
+                }
+                {
+                    Assert.Equal(0, connection.ExecuteNonQuery("CREATE VIRTUAL TABLE RecordParamsTable3 USING MyRecordParamsTable('Hello, world 3!', 100)"));
+                    using (var reader = connection.ExecuteReader("SELECT * FROM RecordParamsTable3"))
+                    {
+                        Assert.True(reader.Read());
+                        Assert.Equal("Hello, world 3!", reader.GetItem<string>("Name"));
+                        Assert.Equal(100, reader.GetItem<long>("Id"));
+                        Assert.False(reader.Read());
+                    }
                 }
             }
         }
