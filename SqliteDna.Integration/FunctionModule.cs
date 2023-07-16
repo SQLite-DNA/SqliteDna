@@ -58,7 +58,7 @@ namespace SqliteDna.Integration
             }
             moduleParams.arguments = arguments;
 
-            string schema = "value";
+            string schema = "Value";
             if (moduleParams.properties.Length > 0)
             {
                 schema = String.Join(",", moduleParams.properties.Select(i => i.Name));
