@@ -16,6 +16,9 @@ namespace SqliteDna.Testing
 
                 case SqliteProvider.System:
                     return new SystemSqliteConnection(connectionString, extensionPath);
+
+                case SqliteProvider.SQLiteCpp:
+                    return new SqliteCppConnection(connectionString, extensionPath);
             }
 
             throw new ArgumentException("provider");

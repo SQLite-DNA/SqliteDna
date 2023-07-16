@@ -8,6 +8,7 @@ namespace TestCsIntegration
         [Theory, MemberData(nameof(ConnectionData))]
         public void Functions(string extensionFile, SqliteProvider provider)
         {
+            int nonQuerySuccess = provider == SqliteProvider.SQLiteCpp ? 0 : -1;
             using (var connection = SqliteConnection.Create("Data Source=:memory:", extensionFile, provider))
             {
                 Assert.Equal(2, connection.ExecuteScalar<long>("SELECT Foo2()"));
@@ -17,10 +18,10 @@ namespace TestCsIntegration
                 Assert.Equal(223372036854775809, connection.ExecuteScalar<long>("SELECT MyInt64Sum(223372036854775807, 2)"));
                 Assert.Equal(2.5, connection.ExecuteScalar<double>("SELECT MyDoubleSum(1.2, 1.3)"));
                 Assert.Equal("Hello world", connection.ExecuteScalar<string>("SELECT MyConcat('Hello', 'world')"));
-                Assert.Equal(-1, connection.ExecuteNonQuery("SELECT Nop()"));
+                Assert.Equal(nonQuerySuccess, connection.ExecuteNonQuery("SELECT Nop()"));
                 {
-                    Assert.Equal(-1, connection.ExecuteNonQuery("SELECT ResetInternalCounter()"));
-                    Assert.Equal(-1, connection.ExecuteNonQuery("SELECT IncrementInternalCounter()"));
+                    Assert.Equal(nonQuerySuccess, connection.ExecuteNonQuery("SELECT ResetInternalCounter()"));
+                    Assert.Equal(nonQuerySuccess, connection.ExecuteNonQuery("SELECT IncrementInternalCounter()"));
                     Assert.Equal(1, connection.ExecuteScalar<long>("SELECT GetInternalCounter()"));
                 }
                 Assert.Equal("Hello world", connection.ExecuteScalar<string>("SELECT MyNullableConcat('Hello', 'world')"));
@@ -40,9 +41,8 @@ namespace TestCsIntegration
                 string commandText = "SELECT InvoiceDate FROM invoices WHERE InvoiceId = 27";
                 string result = provider switch
                 {
-                    SqliteProvider.Microsoft => connection.ExecuteScalar<string>(commandText),
                     SqliteProvider.System => connection.ExecuteScalar<DateTime>(commandText).ToString("yyyy-MM-dd HH:mm:ss.FFF", CultureInfo.InvariantCulture),
-                    _ => throw new NotImplementedException(),
+                    _ => connection.ExecuteScalar<string>(commandText),
                 };
                 Assert.Equal("2009-04-22 00:00:00", result);
                 Assert.Equal("2009-04-22 00:00:00", connection.ExecuteScalar<string>("SELECT DateTimeNop(InvoiceDate) FROM invoices WHERE InvoiceId = 27"));
@@ -58,15 +58,13 @@ namespace TestCsIntegration
                     string commandText = "SELECT HireDate FROM Employees WHERE EmployeeId = 9";
                     string result = provider switch
                     {
-                        SqliteProvider.Microsoft => connection.ExecuteScalar<string>(commandText),
                         SqliteProvider.System => connection.ExecuteScalar<DateTime>(commandText).ToString("yyyy-MM-dd HH:mm:ss.FFF", CultureInfo.InvariantCulture),
-                        _ => throw new NotImplementedException(),
+                        _ => connection.ExecuteScalar<string>(commandText),
                     };
                     string expected = provider switch
                     {
-                        SqliteProvider.Microsoft => "2014-11-15",
                         SqliteProvider.System => "2014-11-15 00:00:00",
-                        _ => throw new NotImplementedException(),
+                        _ => "2014-11-15",
                     };
                     Assert.Equal(expected, result);
                     Assert.Equal("2014-11-15 00:00:00", connection.ExecuteScalar<string>("SELECT DateTimeNop(HireDate) FROM Employees WHERE EmployeeId = 9"));
