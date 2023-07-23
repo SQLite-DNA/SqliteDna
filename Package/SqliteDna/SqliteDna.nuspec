@@ -16,8 +16,8 @@
         </dependencies>
     </metadata>
     <files>
-        <file src="..\SqliteDna.Integration\bin\Release\net7.0\SqliteDna.Integration.dll" target="lib\net7.0" />
-        <file src="..\SqliteDna.SourceGenerator\bin\Release\netstandard2.0\SqliteDna.SourceGenerator.dll" target="analyzers\dotnet\cs" />
-      <file src="build\SqliteDna.props" target="build" />
+        <file src="..\..\SqliteDna.Integration\bin\Release\net7.0\SqliteDna.Integration.dll" target="lib\net7.0" />
+        <file src="..\..\SqliteDna.SourceGenerator\bin\Release\netstandard2.0\SqliteDna.SourceGenerator.dll" target="analyzers\dotnet\cs" />
+        <file src="build\SqliteDna.props" target="build" />
     </files>
 </package>

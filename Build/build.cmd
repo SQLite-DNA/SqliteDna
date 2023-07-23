@@ -5,7 +5,7 @@ dotnet build ..\SqliteDna.SourceGenerator\SqliteDna.SourceGenerator.csproj --con
 @if errorlevel 1 goto end
 
 cd ..\Package
-nuget.exe pack SqliteDna.nuspec -OutputDirectory nupkg -Verbosity detailed -NonInteractive
+nuget.exe pack SqliteDna\SqliteDna.nuspec -OutputDirectory nupkg -Verbosity detailed -NonInteractive
 @if errorlevel 1 goto end
 
 :end
