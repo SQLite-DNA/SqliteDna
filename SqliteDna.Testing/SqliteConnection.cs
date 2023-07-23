@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace SqliteDna.Testing
 {
@@ -26,19 +27,25 @@ namespace SqliteDna.Testing
 
         public static IEnumerable<object[]> GenerateConnectionParameters(IEnumerable<string> extensionFiles)
         {
-            List<object[]> result = new List<object[]>();
-            foreach (string extensionFile in extensionFiles)
-                foreach (SqliteProvider provider in Enum.GetValues(typeof(SqliteProvider)))
-                    result.Add(new object[] { extensionFile, provider });
-
-            return result;
+            return GenerateConnectionParameters(extensionFiles, Enum.GetValues(typeof(SqliteProvider)).Cast<SqliteProvider>());
         }
 
         public static IEnumerable<object[]> GenerateConnectionParameters(IEnumerable<string> extensionFiles, SqliteProvider provider)
         {
+            return GenerateConnectionParameters(extensionFiles, new SqliteProvider[] { provider });
+        }
+
+        private static IEnumerable<object[]> GenerateConnectionParameters(IEnumerable<string> extensionFiles, IEnumerable<SqliteProvider> providers)
+        {
             List<object[]> result = new List<object[]>();
             foreach (string extensionFile in extensionFiles)
-                result.Add(new object[] { extensionFile, provider });
+                foreach (SqliteProvider provider in providers)
+                {
+                    if (provider == SqliteProvider.SQLiteCpp && Environment.OSVersion.Platform != PlatformID.Win32NT)
+                        continue;
+
+                    result.Add(new object[] { extensionFile, provider });
+                }
 
             return result;
         }
