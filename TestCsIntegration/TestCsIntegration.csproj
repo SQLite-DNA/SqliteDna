@@ -25,7 +25,7 @@
 
 	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
 		<Exec Condition=" '$(OS)' == 'Windows_NT' " Command="xcopy /y $(SolutionDir)TestDNNE\bin\$(ConfigurationName)\net7.0\TestDNNENE.dll $(TargetDir)&#xD;&#xA;xcopy /y $(SolutionDir)TestDNNE\bin\$(ConfigurationName)\net7.0\TestDNNE.runtimeconfig.json $(TargetDir)&#xD;&#xA;xcopy /y $(SolutionDir)TestAOT\bin\$(ConfigurationName)\net7.0\win-x64\publish\TestAOT.dll $(TargetDir)&#xD;&#xA;xcopy /y $(SolutionDir)TestDb\*.db $(TargetDir)&#xD;&#xA;xcopy /y $(SolutionDir)x64\$(ConfigurationName)\SqliteDna.SQLiteCppManaged.dll $(TargetDir)&#xD;&#xA;xcopy /y $(SolutionDir)x64\$(ConfigurationName)\Ijwhost.dll $(TargetDir)&#xD;&#xA;xcopy /y $(SolutionDir)SQLiteCpp\bin\$(ConfigurationName)\sqlite3.dll $(TargetDir)" />
-		<Exec Condition=" '$(OS)' == 'Unix' " Command="cp $(SolutionDir)TestDNNE/bin/$(ConfigurationName)/net7.0/TestDNNENE.so $(TargetDir)&#xD;&#xA;cp $(SolutionDir)TestDNNE/bin/$(ConfigurationName)/net7.0/TestDNNE.runtimeconfig.json $(TargetDir)&#xD;&#xA;cp $(SolutionDir)TestAOT/bin/$(ConfigurationName)/net7.0/linux-x64/publish/TestAOT.so $(TargetDir)&#xD;&#xA;cp $(SolutionDir)TestDb/*.db $(TargetDir)" />
+		<Exec Condition=" '$(OS)' == 'Unix' " Command="cp ../TestDNNE/bin/$(ConfigurationName)/net7.0/TestDNNENE.so $(TargetDir)&#xD;&#xA;cp ../TestDNNE/bin/$(ConfigurationName)/net7.0/TestDNNE.runtimeconfig.json $(TargetDir)&#xD;&#xA;cp ../TestAOT/bin/$(ConfigurationName)/net7.0/linux-x64/publish/TestAOT.so $(TargetDir)&#xD;&#xA;cp ../TestDb/*.db $(TargetDir)" />
 	</Target>
 
 </Project>
