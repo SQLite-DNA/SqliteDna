@@ -6,6 +6,8 @@ We use the [DNNE library](https://github.com/AaronRobinsonMSFT/DNNE), [AOT](http
 
 ### Getting started
 
+Visual Studio 2022 with .NET 7 support and .NET desktop development, Desktop development with C++ workloads should be installed.
+
 Create a C# class library .NET 7 project and reference the SqliteDna package (or use Samples\Minimal\Minimal.csproj):
 
 ```xml
