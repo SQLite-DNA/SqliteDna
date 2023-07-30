@@ -84,12 +84,12 @@ Publishing the AOT project will produce the single [ProjectName].dll native exte
 You can automatically publish on build, adding the following targets to the project:
 
 ```xml
-	<Target Name="SetNoBuild">
-		<PropertyGroup>
-			<NoBuild>true</NoBuild>
-		</PropertyGroup>
-	</Target>
-	<Target Name="PublishAfterBuild" AfterTargets="AfterBuild" DependsOnTargets="SetNoBuild;Publish" />
+<Target Name="SetNoBuild">
+	<PropertyGroup>
+		<NoBuild>true</NoBuild>
+	</PropertyGroup>
+</Target>
+<Target Name="PublishAfterBuild" AfterTargets="AfterBuild" DependsOnTargets="SetNoBuild;Publish" />
 ```
 
 ### Features
@@ -157,7 +157,7 @@ CREATE VIRTUAL TABLE RecordParamsTable USING MyRecordParamsTable("Hello, world!"
 
 You can easily test your extension in SQLite using the SqliteDna.Testing package.
 
-Create an XUnit test project and add a reference to SqliteDna.Testing (or use Samples\Test\Test.csproj):
+Create an xUnit test project and add a reference to SqliteDna.Testing (or use Samples\Test\Test.csproj):
 
 ```xml
 <Project Sdk="Microsoft.NET.Sdk">
@@ -214,15 +214,15 @@ namespace Test
 }
 ```
 
-You also need to copy extension .dlls to the Test project output, for example adding the following PostBuildEvent event to the Test project:
+You also need to copy extension .dlls to the Test project output, for example adding the following PostBuildEvent to the Test project:
 
 ```xml
-	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
-		<Exec Condition=" '$(OS)' == 'Windows_NT' " Command="xcopy /y $(SolutionDir)Minimal\bin\$(ConfigurationName)\net7.0\Minimal.dll $(TargetDir)&#xD;&#xA;xcopy /y $(SolutionDir)Minimal\bin\$(ConfigurationName)\net7.0\MinimalNE.dll $(TargetDir)&#xD;&#xA;xcopy /y $(SolutionDir)Minimal\bin\$(ConfigurationName)\net7.0\Minimal.runtimeconfig.json $(TargetDir)&#xD;&#xA;xcopy /y $(SolutionDir)Minimal\bin\$(ConfigurationName)\net7.0\SqliteDna.Integration.dll $(TargetDir)&#xD;&#xA;xcopy /y $(SolutionDir)MinimalAOT\bin\$(ConfigurationName)\net7.0\win-x64\publish\MinimalAOT.dll $(TargetDir)" />
-	</Target>
+<Target Name="PostBuild" AfterTargets="PostBuildEvent">
+	<Exec Condition=" '$(OS)' == 'Windows_NT' " Command="xcopy /y $(SolutionDir)Minimal\bin\$(ConfigurationName)\net7.0\Minimal.dll $(TargetDir)&#xD;&#xA;xcopy /y $(SolutionDir)Minimal\bin\$(ConfigurationName)\net7.0\MinimalNE.dll $(TargetDir)&#xD;&#xA;xcopy /y $(SolutionDir)Minimal\bin\$(ConfigurationName)\net7.0\Minimal.runtimeconfig.json $(TargetDir)&#xD;&#xA;xcopy /y $(SolutionDir)Minimal\bin\$(ConfigurationName)\net7.0\SqliteDna.Integration.dll $(TargetDir)&#xD;&#xA;xcopy /y $(SolutionDir)MinimalAOT\bin\$(ConfigurationName)\net7.0\win-x64\publish\MinimalAOT.dll $(TargetDir)" />
+</Target>
 ```
 
-And add Build Dependencies - Project Dependencies for the Test project on your extension project(s), for the PostBuildEvent to execute after extension .dll files are ready. See Samples.sln as an example:
+And add Build Dependencies - Project Dependencies for the Test project on your extension project(s), to execute PostBuildEvent after extension .dll files are ready. See Samples.sln as an example:
 
 ```xml
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Minimal", "Minimal\Minimal.csproj", "{62096343-8461-4DE8-A23C-F0FB07B517EA}"
