@@ -81,6 +81,17 @@ Publishing the AOT project will produce the single [ProjectName].dll native exte
 
 ![](Doc/minimal-aot-extension.png)
 
+You can automatically publish on build, adding the following targets to the project:
+
+```xml
+	<Target Name="SetNoBuild">
+		<PropertyGroup>
+			<NoBuild>true</NoBuild>
+		</PropertyGroup>
+	</Target>
+	<Target Name="PublishAfterBuild" AfterTargets="AfterBuild" DependsOnTargets="SetNoBuild;Publish" />
+```
+
 ### Features
 
 You can use int, long, double, string, string?, DateTime, Guid, byte[], byte[]? types for your function parameters and return value. They will be automatically converted to corresponding SQLite types.
@@ -140,6 +151,143 @@ And provide parameters from SQLite:
 
 ```sql
 CREATE VIRTUAL TABLE RecordParamsTable USING MyRecordParamsTable("Hello, world!", 100)
+```
+
+### Testing
+
+You can easily test your extension in SQLite using the SqliteDna.Testing package.
+
+Create an XUnit test project and add a reference to SqliteDna.Testing (or use Samples\Test\Test.csproj):
+
+```xml
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+
+    <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="SqliteDna.Testing" Version="*-*" />
+	  
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.6.0" />
+    <PackageReference Include="xunit" Version="2.4.2" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.5">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="coverlet.collector" Version="3.2.0">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+  </ItemGroup>
+
+</Project>
+```
+
+Specify your extension(s) .dll name(s) in GenerateConnectionParameters call, create SqliteConnection, call your functions using the connection and assert results as usual:
+
+```csharp
+using SqliteDna.Testing;
+
+namespace Test
+{
+    public class TestExtensions
+    {
+        [Theory, MemberData(nameof(ConnectionData))]
+        public void Functions(string extensionFile, SqliteProvider provider)
+        {
+            using (var connection = SqliteConnection.Create("Data Source=:memory:", extensionFile, provider))
+            {
+                Assert.Equal(2, connection.ExecuteScalar<long>("SELECT Foo2()"));
+                Assert.Equal(42, connection.ExecuteScalar<long>("SELECT Foo42()"));
+            }
+        }
+
+        public static IEnumerable<object[]> ConnectionData => 
+            SqliteConnection.GenerateConnectionParameters(new string[] { "MinimalNE", "MinimalAOT" });
+    }
+}
+```
+
+You also need to copy extension .dlls to the Test project output, for example adding the following PostBuildEvent event to the Test project:
+
+```xml
+	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
+		<Exec Condition=" '$(OS)' == 'Windows_NT' " Command="xcopy /y $(SolutionDir)Minimal\bin\$(ConfigurationName)\net7.0\Minimal.dll $(TargetDir)&#xD;&#xA;xcopy /y $(SolutionDir)Minimal\bin\$(ConfigurationName)\net7.0\MinimalNE.dll $(TargetDir)&#xD;&#xA;xcopy /y $(SolutionDir)Minimal\bin\$(ConfigurationName)\net7.0\Minimal.runtimeconfig.json $(TargetDir)&#xD;&#xA;xcopy /y $(SolutionDir)Minimal\bin\$(ConfigurationName)\net7.0\SqliteDna.Integration.dll $(TargetDir)&#xD;&#xA;xcopy /y $(SolutionDir)MinimalAOT\bin\$(ConfigurationName)\net7.0\win-x64\publish\MinimalAOT.dll $(TargetDir)" />
+	</Target>
+```
+
+And add Build Dependencies - Project Dependencies for the Test project on your extension project(s), for the PostBuildEvent to execute after extension .dll files are ready. See Samples.sln as an example:
+
+```xml
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Minimal", "Minimal\Minimal.csproj", "{62096343-8461-4DE8-A23C-F0FB07B517EA}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MinimalAOT", "MinimalAOT\MinimalAOT.csproj", "{3449A6FB-FF36-42DF-AC5C-82F098DDA924}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test", "Test\Test.csproj", "{3AF2C048-D2DD-4D21-A1B3-B95D8A87DC2A}"
+	ProjectSection(ProjectDependencies) = postProject
+		{3449A6FB-FF36-42DF-AC5C-82F098DDA924} = {3449A6FB-FF36-42DF-AC5C-82F098DDA924}
+		{62096343-8461-4DE8-A23C-F0FB07B517EA} = {62096343-8461-4DE8-A23C-F0FB07B517EA}
+	EndProjectSection
+EndProject
+```
+
+Running the tests, your extension will be loaded and called in SQLite using Microsoft.Data.Sqlite, System.Data.SQLite and SQLiteC++ providers:
+
+![](Doc/test-run.png)
+
+long, double, string, DBNull, DateTime, byte[], Guid can be used as connection.ExecuteScalar type parameter.
+
+connection.ExecuteNonQuery can be used to call functions not returning anything.
+
+connection.ExecuteReader can be used to read multiple values from a query:
+
+```csharp
+Assert.Equal(0, connection.ExecuteNonQuery("CREATE VIRTUAL TABLE RecordTable USING MyRecordTable"));
+using (var reader = connection.ExecuteReader("SELECT Name, Id FROM RecordTable"))
+{
+    Assert.True(reader.Read());
+    Assert.Equal("n42", reader.GetItem<string>("Name"));
+    Assert.Equal(420, reader.GetItem<long>("Id"));
+    Assert.True(reader.Read());
+    Assert.Equal("n50", reader.GetItem<string>("Name"));
+    Assert.Equal(5, reader.GetItem<long>("Id"));
+}
+```
+
+You can run your extension only in one provider using specific connection parameters like this:
+
+```csharp
+public static IEnumerable<object[]> SystemConnectionData => 
+    SqliteConnection.GenerateConnectionParameters(new string[] { "TestDNNENE", "TestAOT" }, SqliteProvider.System);
+```
+
+And you can check SqliteProvider provider value in test code if there is difference in provider behavior:
+
+```csharp
+using (var connection = SqliteConnection.Create("Data Source=northwind.db", extensionFile, provider))
+{
+    {
+        string commandText = "SELECT HireDate FROM Employees WHERE EmployeeId = 9";
+        string result = provider switch
+        {
+            SqliteProvider.System => connection.ExecuteScalar<DateTime>(commandText).ToString("yyyy-MM-dd HH:mm:ss.FFF", CultureInfo.InvariantCulture),
+            _ => connection.ExecuteScalar<string>(commandText),
+        };
+        string expected = provider switch
+        {
+            SqliteProvider.System => "2014-11-15 00:00:00",
+            _ => "2014-11-15",
+        };
+        Assert.Equal(expected, result);
+        Assert.Equal("2014-11-15 00:00:00", connection.ExecuteScalar<string>("SELECT DateTimeNop(HireDate) FROM Employees WHERE EmployeeId = 9"));
+    }
+}
 ```
 
 ### Related projects
