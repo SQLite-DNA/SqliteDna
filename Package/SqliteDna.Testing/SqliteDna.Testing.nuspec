@@ -17,14 +17,12 @@
 				<dependency id="System.Data.SQLite" version="1.0.117" />
 			</group>
         </dependencies>
-		<contentFiles>
-			<files include="**\*.*" buildAction="none" copyToOutput="true" />
-		</contentFiles>
     </metadata>
     <files>
         <file src="..\..\SqliteDna.Testing\bin\Release\netstandard2.0\SqliteDna.Testing.dll" target="lib\netstandard2.0" />
-		<file src="..\..\SqliteDna.SQLiteCppManaged\x64\Release\SqliteDna.SQLiteCppManaged.dll" target="contentFiles\any\any" />   
-		<file src="..\..\SqliteDna.SQLiteCppManaged\x64\Release\Ijwhost.dll" target="contentFiles\any\any" />   
-		<file src="..\..\SQLiteCpp\bin\Release\sqlite3.dll" target="contentFiles\any\any" />   
+		<file src="..\..\SqliteDna.SQLiteCppManaged\x64\Release\SqliteDna.SQLiteCppManaged.dll" target="build" />   
+		<file src="..\..\SqliteDna.SQLiteCppManaged\x64\Release\Ijwhost.dll" target="build" />   
+		<file src="..\..\SQLiteCpp\bin\Release\sqlite3.dll" target="build" />
+		<file src="build\SqliteDna.Testing.targets" target="build" />
 	</files>
 </package>

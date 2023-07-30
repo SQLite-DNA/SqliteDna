@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Target Name="AfterBuild">
+	<Copy SourceFiles="$(MSBuildThisFileDirectory)SqliteDna.SQLiteCppManaged.dll" DestinationFolder="$(TargetDir)" />
+	<Copy SourceFiles="$(MSBuildThisFileDirectory)Ijwhost.dll" DestinationFolder="$(TargetDir)" />
+	<Copy SourceFiles="$(MSBuildThisFileDirectory)sqlite3.dll" DestinationFolder="$(TargetDir)" />
+  </Target>
+</Project>
