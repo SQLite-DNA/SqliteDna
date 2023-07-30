@@ -154,6 +154,18 @@ namespace TestShared
             return result;
         }
 
+        [SqliteTableFunction]
+        public static DynamicTable MyDynamicTable()
+        {
+            List<object[]> data = new List<object[]> {
+                new object[] { 11L, "Diane", "London" },
+                new object[] { 22L, "Grace", "Berlin" },
+                new object[] { 33, "Alice", "Paris" },
+            };
+
+            return new("id integer, name text, city text", data);
+        }
+
         public static int Noo1()
         {
             return 1;

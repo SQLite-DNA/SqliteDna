@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
@@ -6,19 +7,6 @@ namespace SqliteDna.Integration
 {
     internal class FunctionModule
     {
-        public class ModuleParams
-        {
-            public ModuleParams(Func<string[], IEnumerable> func, System.Reflection.PropertyInfo[] properties)
-            {
-                this.func = func;
-                this.properties = properties;
-            }
-
-            public Func<string[], IEnumerable> func;
-            public System.Reflection.PropertyInfo[] properties;
-            public string[]? arguments;
-        }
-
         public FunctionModule()
         {
             CreateModule();
@@ -44,7 +32,7 @@ namespace SqliteDna.Integration
         [UnmanagedCallersOnly(CallConvs = new[] { typeof(CallConvCdecl) })]
         private static unsafe int xCreate(IntPtr db, IntPtr aux, int argc, IntPtr argv, IntPtr* vtab, IntPtr err)
         {
-            ModuleParams moduleParams = (ModuleParams)GCHandle.FromIntPtr(aux).Target!;
+            BaseFunctionModuleParams moduleParams = (BaseFunctionModuleParams)GCHandle.FromIntPtr(aux).Target!;
 
             string[]? arguments = null;
             if (argc > defaultCreationArgc)
@@ -56,13 +44,8 @@ namespace SqliteDna.Integration
                     arguments[i] = RemoveEnclosingQuotes(Marshal.PtrToStringAnsi((IntPtr)(*(pargv + i + defaultCreationArgc)))!);
                 }
             }
-            moduleParams.arguments = arguments;
-
-            string schema = "Value";
-            if (moduleParams.properties.Length > 0)
-            {
-                schema = String.Join(",", moduleParams.properties.Select(i => i.Name));
-            }
+            moduleParams.OnCreate(arguments);
+            string schema = moduleParams.GetSchema();
 
             Sqlite.GetAPI().declare_vtab(db, Sqlite.StringToSqliteUtf8($"CREATE TABLE x({schema})", out _));
             (*vtab) = Sqlite.GetAPI().malloc(sizeof(VTab));
@@ -98,14 +81,16 @@ namespace SqliteDna.Integration
         [UnmanagedCallersOnly(CallConvs = new[] { typeof(CallConvCdecl) })]
         private static unsafe int xOpen(IntPtr vtab, IntPtr* pcursor)
         {
-            ModuleParams moduleParams = (ModuleParams)GCHandle.FromIntPtr((*(VTab*)vtab).moduleParams).Target!;
-            var enumerator = moduleParams.func(moduleParams.arguments!).GetEnumerator();
+            BaseFunctionModuleParams moduleParams = (BaseFunctionModuleParams)GCHandle.FromIntPtr((*(VTab*)vtab).moduleParams).Target!;
+            var enumerator = moduleParams.GetData().GetEnumerator();
 
             (*pcursor) = Sqlite.GetAPI().malloc(sizeof(Cursor));
             Cursor* cursor = (Cursor*)(*pcursor);
             (*cursor).enumerator = GCHandle.ToIntPtr(GCHandle.Alloc(enumerator));
             (*cursor).eof = !enumerator.MoveNext();
-            (*cursor).properties = GCHandle.ToIntPtr(GCHandle.Alloc(moduleParams.properties));
+
+            PropertyInfo[]? properties = moduleParams.GetProperties();
+            (*cursor).properties = properties != null ? GCHandle.ToIntPtr(GCHandle.Alloc(properties)) : IntPtr.Zero;
 
             return Sqlite.SQLITE_OK;
         }
@@ -141,11 +126,21 @@ namespace SqliteDna.Integration
         private static unsafe int xColumn(IntPtr cursor, IntPtr context, int i)
         {
             IEnumerator enumerator = (IEnumerator)GCHandle.FromIntPtr((*(Cursor*)cursor).enumerator).Target!;
-            System.Reflection.PropertyInfo[] properties = (System.Reflection.PropertyInfo[])GCHandle.FromIntPtr((*(Cursor*)cursor).properties).Target!;
-            if (properties.Length == 0)
-                Sqlite.ResultObject(context, enumerator.Current);
+            IntPtr cursorProperties = (*(Cursor*)cursor).properties;
+            if (cursorProperties != IntPtr.Zero)
+            {
+                PropertyInfo[] properties = (PropertyInfo[])GCHandle.FromIntPtr(cursorProperties).Target!;
+                if (properties.Length == 0)
+                    Sqlite.ResultObject(context, enumerator.Current);
+                else
+                    Sqlite.ResultObject(context, properties[i].GetValue(enumerator.Current, null));
+            }
             else
-                Sqlite.ResultObject(context, properties[i].GetValue(enumerator.Current, null));
+            {
+                object[] record = (object[])enumerator.Current;
+                Sqlite.ResultObject(context, record[i]);
+            }
+
             return Sqlite.SQLITE_OK;
         }
 

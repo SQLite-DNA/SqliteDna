@@ -214,6 +214,25 @@ namespace TestCsIntegration
                         Assert.False(reader.Read());
                     }
                 }
+                {
+                    Assert.Equal(0, connection.ExecuteNonQuery("CREATE VIRTUAL TABLE DynamicTable USING MyDynamicTable()"));
+                    using (var reader = connection.ExecuteReader("SELECT * FROM DynamicTable"))
+                    {
+                        Assert.True(reader.Read());
+                        Assert.Equal(11, reader.GetItem<long>("id"));
+                        Assert.Equal("Diane", reader.GetItem<string>("name"));
+                        Assert.Equal("London", reader.GetItem<string>("city"));
+                        Assert.True(reader.Read());
+                        Assert.Equal(22, reader.GetItem<long>("id"));
+                        Assert.Equal("Grace", reader.GetItem<string>("name"));
+                        Assert.Equal("Berlin", reader.GetItem<string>("city"));
+                        Assert.True(reader.Read());
+                        Assert.Equal(33, reader.GetItem<long>("id"));
+                        Assert.Equal("Alice", reader.GetItem<string>("name"));
+                        Assert.Equal("Paris", reader.GetItem<string>("city"));
+                        Assert.False(reader.Read());
+                    }
+                }
             }
         }
 

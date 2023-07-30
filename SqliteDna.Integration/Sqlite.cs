@@ -196,14 +196,21 @@ namespace SqliteDna.Integration
             sqliteApi.free(new IntPtr(text));
         }
 
-        public static unsafe int CreateModule(string name, System.Reflection.PropertyInfo[] properties, Func<string[], IEnumerable> func)
+        public static unsafe int CreateStaticModule(string name, System.Reflection.PropertyInfo[] properties, Func<string[]?, IEnumerable> func)
+        {
+            return CreateModule(name, new StaticFunctionModuleParams(func, properties));
+        }
+
+        public static unsafe int CreateDynamicModule(string name, Func<string[]?, DynamicTable> func)
+        {
+            return CreateModule(name, new DynamicFunctionModuleParams(func));
+        }
+
+        private static unsafe int CreateModule(string name, BaseFunctionModuleParams moduleParams)
         {
             FunctionModule functionModule = new();
             GCHandle.Alloc(functionModule);
-
-            FunctionModule.ModuleParams moduleParams = new(func, properties);
             GCHandle gch = GCHandle.Alloc(moduleParams);
-
             return sqliteApi.create_module(db, StringToSqliteUtf8(name, out _), ref functionModule.module, GCHandle.ToIntPtr(gch));
         }
 

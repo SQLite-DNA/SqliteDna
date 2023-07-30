@@ -101,15 +101,6 @@ namespace SqliteDna.SourceGenerator
             string createTableFunctions = "";
             foreach (var i in receiver.TableFunctions)
             {
-                string properties = "";
-                ITypeSymbol? elementType = GetGenericArgument(i.ReturnType);
-                if (elementType != null)
-                {
-                    string fullTypeName = Util.GetFullTypeName(elementType);
-                    foreach (string p in GetPropertyNames(elementType))
-                        properties += $"typeof({fullTypeName}).GetProperty(\"{p}\")!,";
-                }
-
                 string functionArguments = "";
                 int valueIndex = 0;
                 foreach (var p in i.Parameters)
@@ -121,7 +112,23 @@ namespace SqliteDna.SourceGenerator
                 }
                 string functionBody = $"{Util.GetFullMethodName(i)}({functionArguments})";
 
-                createTableFunctions += $"            SqliteDna.Integration.Sqlite.CreateModule(\"{i.Name}\", new System.Reflection.PropertyInfo[] {{{properties}}}, (arguments) => {functionBody});\r\n";
+                if (Util.GetFullTypeName(i.ReturnType) == "SqliteDna.Integration.DynamicTable")
+                {
+                    createTableFunctions += $"            SqliteDna.Integration.Sqlite.CreateDynamicModule(\"{i.Name}\", (arguments) => {functionBody});\r\n";
+                }
+                else
+                {
+                    string properties = "";
+                    ITypeSymbol? elementType = GetGenericArgument(i.ReturnType);
+                    if (elementType != null)
+                    {
+                        string fullTypeName = Util.GetFullTypeName(elementType);
+                        foreach (string p in GetPropertyNames(elementType))
+                            properties += $"typeof({fullTypeName}).GetProperty(\"{p}\")!,";
+                    }
+
+                    createTableFunctions += $"            SqliteDna.Integration.Sqlite.CreateStaticModule(\"{i.Name}\", new System.Reflection.PropertyInfo[] {{{properties}}}, (arguments) => {functionBody});\r\n";
+                }
             }
 
             source = source.Replace("[FUNCTIONS]", functions);
