@@ -15,6 +15,6 @@
 
 	<Import Project="..\TestShared\TestShared.projitems" Label="Shared" />
 
-	<Import Project="..\Package\build\SqliteDna.props" />
+	<Import Project="..\Package\SqliteDna\build\SqliteDna.props" />
 
 </Project>
