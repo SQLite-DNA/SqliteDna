@@ -166,6 +166,33 @@ namespace TestShared
             return new("id integer, name text, city text", data);
         }
 
+        [SqliteTableFunction]
+        public static DynamicTable MyDynamicParamsTable(string schema, string record)
+        {
+            var types = schema.Split(',').Select(i => i.Split(' ', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries).Last()).ToArray();
+
+            var values = record.Split(',').ToArray();
+
+            var valuesArray = new object[values.Length];
+            for (int i = 0; i < values.Length; ++i)
+            {
+                switch (types[i])
+                {
+                    case "integer":
+                        valuesArray[i] = long.Parse(values[i]);
+                        break;
+                    case "real":
+                        valuesArray[i] = double.Parse(values[i]);
+                        break;
+                    case "text":
+                        valuesArray[i] = values[i];
+                        break;
+                }
+            }
+
+            return new(schema, new List<object[]> { valuesArray });
+        }
+
         public static int Noo1()
         {
             return 1;

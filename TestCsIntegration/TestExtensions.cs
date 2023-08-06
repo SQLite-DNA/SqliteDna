@@ -233,6 +233,28 @@ namespace TestCsIntegration
                         Assert.False(reader.Read());
                     }
                 }
+                {
+                    Assert.Equal(0, connection.ExecuteNonQuery("CREATE VIRTUAL TABLE DynamicParamsTable1 USING MyDynamicParamsTable(\"id integer, name text, city text\", \"11,Diane,London\")"));
+                    using (var reader = connection.ExecuteReader("SELECT * FROM DynamicParamsTable1"))
+                    {
+                        Assert.True(reader.Read());
+                        Assert.Equal(11, reader.GetItem<long>("id"));
+                        Assert.Equal("Diane", reader.GetItem<string>("name"));
+                        Assert.Equal("London", reader.GetItem<string>("city"));
+                        Assert.False(reader.Read());
+                    }
+                }
+                {
+                    Assert.Equal(0, connection.ExecuteNonQuery("CREATE VIRTUAL TABLE DynamicParamsTable2 USING MyDynamicParamsTable(\"value real, id integer, name text\", \"1.21,3,Grace\")"));
+                    using (var reader = connection.ExecuteReader("SELECT * FROM DynamicParamsTable2"))
+                    {
+                        Assert.True(reader.Read());
+                        Assert.Equal(1.21, reader.GetItem<double>("value"));
+                        Assert.Equal(3, reader.GetItem<long>("id"));
+                        Assert.Equal("Grace", reader.GetItem<string>("name"));
+                        Assert.False(reader.Read());
+                    }
+                }
             }
         }
 
