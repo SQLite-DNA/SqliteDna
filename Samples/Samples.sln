@@ -7,10 +7,17 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Minimal", "Minimal\Minimal.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MinimalAOT", "MinimalAOT\MinimalAOT.csproj", "{3449A6FB-FF36-42DF-AC5C-82F098DDA924}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test", "Test\Test.csproj", "{3AF2C048-D2DD-4D21-A1B3-B95D8A87DC2A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Test", "Test\Test.csproj", "{3AF2C048-D2DD-4D21-A1B3-B95D8A87DC2A}"
 	ProjectSection(ProjectDependencies) = postProject
 		{3449A6FB-FF36-42DF-AC5C-82F098DDA924} = {3449A6FB-FF36-42DF-AC5C-82F098DDA924}
 		{62096343-8461-4DE8-A23C-F0FB07B517EA} = {62096343-8461-4DE8-A23C-F0FB07B517EA}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CsvReader", "CsvReader\CsvReader.csproj", "{83984F94-BA42-4AF0-9635-5A30518CABA0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CsvReaderTest", "CsvReaderTest\CsvReaderTest.csproj", "{D3120AC9-1422-44A9-99E5-6B6C9D0EC8F2}"
+	ProjectSection(ProjectDependencies) = postProject
+		{83984F94-BA42-4AF0-9635-5A30518CABA0} = {83984F94-BA42-4AF0-9635-5A30518CABA0}
 	EndProjectSection
 EndProject
 Global
@@ -31,6 +38,14 @@ Global
 		{3AF2C048-D2DD-4D21-A1B3-B95D8A87DC2A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3AF2C048-D2DD-4D21-A1B3-B95D8A87DC2A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3AF2C048-D2DD-4D21-A1B3-B95D8A87DC2A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{83984F94-BA42-4AF0-9635-5A30518CABA0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{83984F94-BA42-4AF0-9635-5A30518CABA0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{83984F94-BA42-4AF0-9635-5A30518CABA0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{83984F94-BA42-4AF0-9635-5A30518CABA0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D3120AC9-1422-44A9-99E5-6B6C9D0EC8F2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D3120AC9-1422-44A9-99E5-6B6C9D0EC8F2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D3120AC9-1422-44A9-99E5-6B6C9D0EC8F2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D3120AC9-1422-44A9-99E5-6B6C9D0EC8F2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
