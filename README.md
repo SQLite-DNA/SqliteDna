@@ -153,6 +153,53 @@ And provide parameters from SQLite:
 CREATE VIRTUAL TABLE RecordParamsTable USING MyRecordParamsTable("Hello, world!", 100)
 ```
 
+### Dynamic virtual tables
+
+If you provide a virtual table and its schema is not known at compile time, you should return a DynamicTable object from the SqliteTableFunction.
+
+The Samples\CsvReader project demonstrates how to implement a .csv file reader when the table data and columns are specified at runtime:
+
+```sql
+CREATE VIRTUAL TABLE Catalonia USING csv(crash_catalonia.csv, "Day_of_Week text, Number_of_Crashes integer")
+```
+
+In the csv function we extract column types from the provided schema, parse .csv data according to the extracted types, return the provided schema and the extracted data as a DynamicTable object:
+
+```csharp
+[SqliteTableFunction]
+public static DynamicTable csv(string filename, string schema)
+{
+    var types = schema.Split(',').Select(i => i.Split(' ', StringSplitOptions.RemoveEmptyEntries | 
+        StringSplitOptions.TrimEntries).Last()).ToArray();
+
+    List<object[]> dataResult = new();
+    foreach (string line in File.ReadAllLines(filename))
+    {
+        var values = line.Split(',').ToArray();
+
+        var valuesArray = new object[values.Length];
+        for (int i = 0; i < values.Length; ++i)
+        {
+            switch (types[i])
+            {
+                case "integer":
+                    valuesArray[i] = long.Parse(values[i]);
+                    break;
+                case "real":
+                    valuesArray[i] = double.Parse(values[i]);
+                    break;
+                case "text":
+                    valuesArray[i] = values[i].Replace("\"","");
+                    break;
+            }
+        }
+        dataResult.Add(valuesArray);
+    }
+
+    return new(schema, dataResult);
+}
+```
+
 ### Testing
 
 You can easily test your extension in SQLite using the SqliteDna.Testing package.
