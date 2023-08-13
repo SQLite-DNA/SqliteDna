@@ -19,4 +19,7 @@ nuget.exe pack SqliteDna\SqliteDna.nuspec -OutputDirectory nupkg -Verbosity deta
 nuget.exe pack SqliteDna.Testing\SqliteDna.Testing.nuspec -OutputDirectory nupkg -Verbosity detailed -NonInteractive
 @if errorlevel 1 goto end
 
+nuget.exe pack SqliteDna.Templates\SqliteDna.Templates.nuspec -OutputDirectory nupkg -Verbosity detailed -NonInteractive
+@if errorlevel 1 goto end
+
 :end

@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+    <metadata minClientVersion="2.5">
+        <id>SqliteDna.Templates</id>
+        <version>1.0.0</version>
+        <title>Sqlite-DNA Templates</title>
+        <authors>Govert van Drimmelen</authors>
+        <owners>Govert van Drimmelen</owners>
+        <projectUrl>https://github.com/SQLite-DNA/SqliteDna</projectUrl>
+        <repository type="git" url="https://github.com/SQLite-DNA/SqliteDna" />
+        <description>Sqlite-DNA templates for new projects.</description>
+        <summary>Sqlite-DNA templates for new projects.</summary>
+        <tags>SQLite .NET C#</tags>
+        <packageTypes>
+          <packageType name="Template" />
+        </packageTypes>
+    </metadata>
+    <files>
+        <file src="..\..\Templates\Projects\**" target="content" />
+    </files>
+</package>

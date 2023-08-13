@@ -1,0 +1,13 @@
+{
+    "$schema": "http://json.schemastore.org/template",
+    "author": "Govert van Drimmelen",
+    "classifications": [ "SQLite", "Extension" ],
+    "identity": "SqliteDna.ExtensionDNNEProject",
+    "sourceName": "ExtensionDNNE",
+    "name": "SQLite extension (DNNE)",
+    "shortName": "sqlitex",
+    "tags": {
+        "language": "C#",
+        "type": "project"
+    }
+}
