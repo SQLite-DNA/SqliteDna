@@ -5,6 +5,7 @@
     "identity": "SqliteDna.ExtensionAOTProject",
     "sourceName": "ExtensionAOT",
     "name": "SQLite extension (AOT)",
+    "description": "A project for an SQLite extension with AOT publishing.",
     "shortName": "sqlitexa",
     "tags": {
         "language": "C#",

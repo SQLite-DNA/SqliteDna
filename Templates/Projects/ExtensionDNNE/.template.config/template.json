@@ -5,6 +5,7 @@
     "identity": "SqliteDna.ExtensionDNNEProject",
     "sourceName": "ExtensionDNNE",
     "name": "SQLite extension (DNNE)",
+    "description": "A project for an SQLite extension using DNNE wrapper mode.",
     "shortName": "sqlitex",
     "tags": {
         "language": "C#",

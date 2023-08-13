@@ -5,6 +5,7 @@
   "identity": "SqliteDna.ExtensionTestProject",
   "sourceName": "ExtensionTest",
   "name": "SQLite extension test",
+  "description": "A project that contains xUnit.net tests for an SQLite extension.",
   "shortName": "sqlitetest",
   "tags": {
     "language": "C#",
