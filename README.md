@@ -337,6 +337,12 @@ using (var connection = SqliteConnection.Create("Data Source=northwind.db", exte
 }
 ```
 
+### Project templates
+
+You can install SqliteDna.Templates package that includes project templates for creating and testing SQLite extensions:
+
+![](Doc/new-project-templates.png)
+
 ### Related projects
 
 * https://observablehq.com/@asg017/introducing-sqlite-loadable-rs
