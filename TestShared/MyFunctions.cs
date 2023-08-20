@@ -77,6 +77,12 @@ namespace TestShared
         }
 
         [SqliteFunction]
+        public static bool NegBool(bool b)
+        {
+            return !b;
+        }
+
+        [SqliteFunction]
         public static void Nop()
         {
         }

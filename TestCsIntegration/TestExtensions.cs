@@ -28,6 +28,12 @@ namespace TestCsIntegration
                 Assert.Equal(DBNull.Value, connection.ExecuteScalar<DBNull>("SELECT MyNullableConcat(NULL, NULL)"));
                 Assert.Equal("Hello", connection.ExecuteScalar<string>("SELECT MyNullableConcat('Hello', NULL)"));
                 Assert.Equal("world", connection.ExecuteScalar<string>("SELECT MyNullableConcat(NULL, 'world')"));
+
+                Assert.Equal(1, connection.ExecuteScalar<long>("SELECT true"));
+                Assert.Equal(0, connection.ExecuteScalar<long>("SELECT false"));
+                Assert.Equal(0, connection.ExecuteScalar<long>("SELECT NegBool(true)"));
+                Assert.Equal(1, connection.ExecuteScalar<long>("SELECT NegBool(false)"));
+
                 Assert.ThrowsAny<Exception>(() => connection.ExecuteNonQuery("SELECT MyError()"));
                 Assert.ThrowsAny<Exception>(() => connection.ExecuteNonQuery("SELECT Noo1()"));
             }

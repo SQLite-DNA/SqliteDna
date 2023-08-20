@@ -180,6 +180,8 @@ namespace SqliteDna.SourceGenerator
                     return "Int";
                 case SpecialType.System_Int64:
                     return "Int64";
+                case SpecialType.System_Boolean:
+                    return "Bool";
                 case SpecialType.System_Double:
                     return "Double";
                 case SpecialType.System_String:

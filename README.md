@@ -94,7 +94,7 @@ You can automatically publish on build, adding the following targets to the proj
 
 ### Features
 
-You can use int, long, double, string, string?, DateTime, Guid, byte[], byte[]? types for your function parameters and return value. They will be automatically converted to corresponding SQLite types.
+You can use bool, int, long, double, string, string?, DateTime, Guid, byte[], byte[]? types for your function parameters and return value. They will be automatically converted to corresponding SQLite types.
 
 DateTime can be constructed from ISO-8601, Julian day, and unix timestamp formats. Returned DateTime is converted to an SQLite string.
 

@@ -56,6 +56,11 @@ namespace SqliteDna.Integration
             return sqliteApi.value_int64(values[i]);
         }
 
+        public static unsafe bool ValueBool(IntPtr* values, int i)
+        {
+            return sqliteApi.value_int(values[i]) != 0;
+        }
+
         public static unsafe double ValueDouble(IntPtr* values, int i)
         {
             return sqliteApi.value_double(values[i]);
@@ -120,6 +125,11 @@ namespace SqliteDna.Integration
             return long.Parse(arguments[i]);
         }
 
+        public static unsafe bool ArgumentBool(string[] arguments, int i)
+        {
+            return bool.Parse(arguments[i]);
+        }
+
         public static unsafe double ArgumentDouble(string[] arguments, int i)
         {
             return double.Parse(arguments[i]);
@@ -143,6 +153,11 @@ namespace SqliteDna.Integration
         public static unsafe void ResultInt64(IntPtr context, long i)
         {
             sqliteApi.result_int64(context, i);
+        }
+
+        public static unsafe void ResultBool(IntPtr context, bool b)
+        {
+            sqliteApi.result_int(context, b ? 1 : 0);
         }
 
         public static unsafe void ResultDouble(IntPtr context, double d)
