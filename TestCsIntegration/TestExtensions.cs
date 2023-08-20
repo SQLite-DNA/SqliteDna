@@ -215,6 +215,14 @@ namespace TestCsIntegration
                     }
                 }
                 {
+                    Assert.Equal(0, connection.ExecuteNonQuery("CREATE VIRTUAL TABLE RecordTableWithSQLiteKeyword USING MyTableWithSQLiteKeyword"));
+                    using (var reader = connection.ExecuteReader("SELECT \"Exists\" FROM RecordTableWithSQLiteKeyword"))
+                    {
+                        Assert.True(reader.Read());
+                        Assert.Equal("yes", reader.GetItem<string>("Exists"));
+                    }
+                }
+                {
                     Assert.Equal(0, connection.ExecuteNonQuery("CREATE VIRTUAL TABLE DynamicTable USING MyDynamicTable()"));
                     using (var reader = connection.ExecuteReader("SELECT * FROM DynamicTable"))
                     {

@@ -5,6 +5,7 @@ namespace TestShared
     public class MyFunctions
     {
         public record CustomRecord(string Name, int Id);
+        public record RecordWithSQLiteKeyword(string Exists);
 
         [SqliteFunction]
         public static int Foo2()
@@ -145,6 +146,12 @@ namespace TestShared
         {
             List<CustomRecord> result = new List<CustomRecord> { new CustomRecord("n42", 420), new CustomRecord("n50", 5) };
             return result;
+        }
+
+        [SqliteTableFunction]
+        public static IEnumerable<RecordWithSQLiteKeyword> MyTableWithSQLiteKeyword()
+        {
+            return new List<RecordWithSQLiteKeyword> { new RecordWithSQLiteKeyword("yes") };
         }
 
         [SqliteTableFunction]

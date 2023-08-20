@@ -33,7 +33,7 @@ namespace SqliteDna.Integration
             string schema = "Value";
             if (properties.Length > 0)
             {
-                schema = String.Join(",", properties.Select(i => i.Name));
+                schema = String.Join(",", properties.Select(i => '"' + i.Name + '"'));
             }
 
             return schema;
