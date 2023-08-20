@@ -7,6 +7,16 @@ namespace TestShared
         public record CustomRecord(string Name, int Id);
         public record RecordWithSQLiteKeyword(string Exists);
 
+        public class BaseClassWithProperty
+        {
+            public string? BaseName { get; set; }
+        }
+
+        public class DerivedClassWithProperty : BaseClassWithProperty
+        {
+            public string? DerivedName { get; set; }
+        }
+
         [SqliteFunction]
         public static int Foo2()
         {
@@ -152,6 +162,15 @@ namespace TestShared
         public static IEnumerable<RecordWithSQLiteKeyword> MyTableWithSQLiteKeyword()
         {
             return new List<RecordWithSQLiteKeyword> { new RecordWithSQLiteKeyword("yes") };
+        }
+
+        [SqliteTableFunction]
+        public static IEnumerable<DerivedClassWithProperty> MyTableWithInheritedProperty()
+        {
+            DerivedClassWithProperty o = new DerivedClassWithProperty();
+            o.BaseName = "base";
+            o.DerivedName = "derived";
+            return new List<DerivedClassWithProperty> { o };
         }
 
         [SqliteTableFunction]

@@ -223,6 +223,15 @@ namespace TestCsIntegration
                     }
                 }
                 {
+                    Assert.Equal(0, connection.ExecuteNonQuery("CREATE VIRTUAL TABLE RecordTableWithInheritedProperty USING MyTableWithInheritedProperty"));
+                    using (var reader = connection.ExecuteReader("SELECT * FROM RecordTableWithInheritedProperty"))
+                    {
+                        Assert.True(reader.Read());
+                        Assert.Equal("base", reader.GetItem<string>("BaseName"));
+                        Assert.Equal("derived", reader.GetItem<string>("DerivedName"));
+                    }
+                }
+                {
                     Assert.Equal(0, connection.ExecuteNonQuery("CREATE VIRTUAL TABLE DynamicTable USING MyDynamicTable()"));
                     using (var reader = connection.ExecuteReader("SELECT * FROM DynamicTable"))
                     {

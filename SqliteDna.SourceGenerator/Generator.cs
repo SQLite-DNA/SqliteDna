@@ -156,7 +156,7 @@ namespace SqliteDna.SourceGenerator
             List<string> result = new List<string>();
             if (AdaptType(elementType) == null)
             {
-                foreach (ISymbol member in elementType.GetMembers())
+                foreach (ISymbol member in Util.GetBaseTypesAndThis(elementType).SelectMany(i => i.GetMembers()))
                 {
                     if (member.DeclaredAccessibility == Accessibility.Public && !member.IsImplicitlyDeclared)
                     {
