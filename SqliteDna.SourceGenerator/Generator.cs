@@ -161,7 +161,10 @@ namespace SqliteDna.SourceGenerator
                     if (member.DeclaredAccessibility == Accessibility.Public && !member.IsImplicitlyDeclared)
                     {
                         if (member is IPropertySymbol property)
-                            result.Add(property.Name);
+                        {
+                            if (!result.Contains(property.Name))
+                                result.Add(property.Name);
+                        }
                     }
                 }
             }

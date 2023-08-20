@@ -7,14 +7,16 @@ namespace TestShared
         public record CustomRecord(string Name, int Id);
         public record RecordWithSQLiteKeyword(string Exists);
 
-        public class BaseClassWithProperty
+        public abstract class BaseClassWithProperty
         {
             public string? BaseName { get; set; }
+            public abstract string? Name { get; }
         }
 
         public class DerivedClassWithProperty : BaseClassWithProperty
         {
             public string? DerivedName { get; set; }
+            public override string? Name { get; } = "new name";
         }
 
         [SqliteFunction]

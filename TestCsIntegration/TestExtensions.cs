@@ -229,6 +229,7 @@ namespace TestCsIntegration
                         Assert.True(reader.Read());
                         Assert.Equal("base", reader.GetItem<string>("BaseName"));
                         Assert.Equal("derived", reader.GetItem<string>("DerivedName"));
+                        Assert.Equal("new name", reader.GetItem<string>("Name"));
                     }
                 }
                 {
