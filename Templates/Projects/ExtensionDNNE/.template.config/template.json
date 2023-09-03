@@ -1,11 +1,11 @@
 {
     "$schema": "http://json.schemastore.org/template",
-    "author": "Govert van Drimmelen",
+    "author": "DNA Kode",
     "classifications": [ "SQLite", "Extension" ],
     "identity": "SqliteDna.ExtensionDNNEProject",
     "sourceName": "ExtensionDNNE",
     "name": "SQLite extension (DNNE)",
-    "description": "A project for an SQLite extension using DNNE wrapper mode.",
+    "description": "A project for creating an SQLite extension using DNNE wrapper mode.",
     "shortName": "sqlitex",
     "tags": {
         "language": "C#",

@@ -1,11 +1,11 @@
 {
     "$schema": "http://json.schemastore.org/template",
-    "author": "Govert van Drimmelen",
+    "author": "DNA Kode",
     "classifications": [ "SQLite", "Extension" ],
     "identity": "SqliteDna.ExtensionAOTProject",
     "sourceName": "ExtensionAOT",
     "name": "SQLite extension (AOT)",
-    "description": "A project for an SQLite extension with AOT publishing.",
+    "description": "A project for creating an SQLite extension with AOT publishing.",
     "shortName": "sqlitexa",
     "tags": {
         "language": "C#",

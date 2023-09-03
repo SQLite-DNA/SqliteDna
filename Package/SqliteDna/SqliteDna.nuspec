@@ -4,8 +4,8 @@
         <id>SqliteDna</id>
         <version>1.0.0</version>
         <title>Sqlite-DNA</title>
-        <authors>Govert van Drimmelen</authors>
-        <owners>Govert van Drimmelen</owners>
+        <authors>DNA Kode</authors>
+        <owners>DNA Kode</owners>
         <projectUrl>https://github.com/SQLite-DNA/SqliteDna</projectUrl>
         <repository type="git" url="https://github.com/SQLite-DNA/SqliteDna" />
         <description>Sqlite-DNA support writing SQLite extensions with .NET.</description>

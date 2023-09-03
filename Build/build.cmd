@@ -1,4 +1,4 @@
-call "C:\Program Files\Microsoft Visual Studio\2022\Preview\Common7\Tools\VsMSBuildCmd.bat"
+call "C:\Program Files\Microsoft Visual Studio\2022\Professional\Common7\Tools\VsMSBuildCmd.bat"
 
 dotnet build ..\SqliteDna.Integration\SqliteDna.Integration.csproj --configuration Release
 @if errorlevel 1 goto end
