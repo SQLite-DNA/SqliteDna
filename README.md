@@ -52,9 +52,12 @@ namespace Minimal
 
 Build the project. SqliteDna will use DNNE mode and produce 4 files comprising your extension: [ProjectName]NE.dll (native wrapper), [ProjectName].dll (main .NET dll), [ProjectName].runtimeconfig.json, SqliteDna.Integration.dll.
 
+> **NOTE:** The default target platform for DNNE is **64-bit** (and this is the only option for AOT compilation). You need a 64-bit SQLite CLI or host application to load the 64-bit extension, as is used in the SQLite CLI examples below. A precompiled 64-bit of of the SQLite CLI is available at https://github.com/nalgeon/sqlite/releases - the sqlite.exe files here are 64-bit executables for Windows.
+
 You can now load the extension in SQLite and call the functions:
 
 ![](Doc/minimal-extension.png)
+
 
 To use the AOT mode, add PublishAOT and RuntimeIdentifier properties to the project (or use Samples\MinimalAOT\MinimalAOT.csproj):
 
