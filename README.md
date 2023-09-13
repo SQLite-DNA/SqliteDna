@@ -4,6 +4,8 @@ Sqlite-DNA supports writing [SQLite extensions](https://www.sqlite.org/loadext.h
 
 We use the [DNNE library](https://github.com/AaronRobinsonMSFT/DNNE), [AOT](https://learn.microsoft.com/en-us/dotnet/core/deploying/native-aot/) and [Source Generators](https://learn.microsoft.com/en-us/dotnet/csharp/roslyn-sdk/source-generators-overview) to create a native library exporting the .NET functions.
 
+The project shows how the new .NET native capabilities can expand the useful scope of C# and .NET. For feedback or support, please start a discussion, create a new issue, or send an email to govert@dnakode.com.
+
 ### Getting started
 
 Visual Studio 2022 with .NET 7 support and .NET desktop development, Desktop development with C++ workloads should be installed.
