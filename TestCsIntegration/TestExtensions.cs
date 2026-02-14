@@ -279,6 +279,26 @@ namespace TestCsIntegration
                         Assert.False(reader.Read());
                     }
                 }
+
+                {
+                    Assert.Equal(0, connection.ExecuteNonQuery("CREATE VIRTUAL TABLE WritableTable USING MyWritableTable()"));
+
+                    connection.ExecuteNonQuery("INSERT INTO WritableTable(id, name) VALUES (1, 'Alice')");
+                    Assert.Equal(1, connection.ExecuteScalar<long>("SELECT COUNT(*) FROM WritableTable"));
+                    Assert.Equal("Alice", connection.ExecuteScalar<string>("SELECT name FROM WritableTable WHERE id = 1"));
+
+                    connection.ExecuteNonQuery("UPDATE WritableTable SET name = 'Bob' WHERE id = 1");
+                    Assert.Equal("Bob", connection.ExecuteScalar<string>("SELECT name FROM WritableTable WHERE id = 1"));
+
+                    connection.ExecuteNonQuery("INSERT INTO WritableTable(rowid, id, name) VALUES (100, 2, 'Charlie')");
+                    Assert.Equal(100, connection.ExecuteScalar<long>("SELECT rowid FROM WritableTable WHERE id = 2"));
+
+                    connection.ExecuteNonQuery("UPDATE WritableTable SET rowid = 101 WHERE id = 2");
+                    Assert.Equal(101, connection.ExecuteScalar<long>("SELECT rowid FROM WritableTable WHERE id = 2"));
+
+                    connection.ExecuteNonQuery("DELETE FROM WritableTable WHERE id = 1");
+                    Assert.Equal(1, connection.ExecuteScalar<long>("SELECT COUNT(*) FROM WritableTable"));
+                }
             }
         }
 

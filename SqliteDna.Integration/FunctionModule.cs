@@ -2,6 +2,7 @@
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using System;
 
 namespace SqliteDna.Integration
 {
@@ -15,8 +16,9 @@ namespace SqliteDna.Integration
         private unsafe void CreateModule()
         {
             module = new();
+            module.iVersion = 1;
             module.xCreate = &xCreate;
-            module.xConnect = &XConnect;
+            module.xConnect = &xCreate;
             module.xBestIndex = &xBestIndex;
             module.xDisconnect = &xDisconnect;
             module.xDestroy = &xDestroy;
@@ -49,27 +51,28 @@ namespace SqliteDna.Integration
 
             Sqlite.GetAPI().declare_vtab(db, Sqlite.StringToSqliteUtf8($"CREATE TABLE x({schema})", out _));
             (*vtab) = Sqlite.GetAPI().malloc(sizeof(VTab));
+            new Span<byte>((void*)(*vtab), sizeof(VTab)).Clear();
             (*(VTab*)(*vtab)).moduleParams = aux;
-            return Sqlite.SQLITE_OK;
-        }
-
-        [UnmanagedCallersOnly(CallConvs = new[] { typeof(CallConvCdecl) })]
-        private static unsafe int XConnect(IntPtr db, IntPtr aux, int argc, IntPtr argv, IntPtr* vtab, IntPtr err)
-        {
             return Sqlite.SQLITE_OK;
         }
 
         [UnmanagedCallersOnly(CallConvs = new[] { typeof(CallConvCdecl) })]
         private static unsafe int xDisconnect(IntPtr vtab)
         {
+            DisconnectImpl(vtab);
             return Sqlite.SQLITE_OK;
         }
 
         [UnmanagedCallersOnly(CallConvs = new[] { typeof(CallConvCdecl) })]
         private static unsafe int xDestroy(IntPtr vtab)
         {
-            Sqlite.GetAPI().free(vtab);
+            DisconnectImpl(vtab);
             return Sqlite.SQLITE_OK;
+        }
+
+        private static unsafe void DisconnectImpl(IntPtr vtab)
+        {
+            Sqlite.GetAPI().free(vtab);
         }
 
         [UnmanagedCallersOnly(CallConvs = new[] { typeof(CallConvCdecl) })]
@@ -85,9 +88,11 @@ namespace SqliteDna.Integration
             var enumerator = moduleParams.GetData().GetEnumerator();
 
             (*pcursor) = Sqlite.GetAPI().malloc(sizeof(Cursor));
+            new Span<byte>((void*)(*pcursor), sizeof(Cursor)).Clear();
             Cursor* cursor = (Cursor*)(*pcursor);
             (*cursor).enumerator = GCHandle.ToIntPtr(GCHandle.Alloc(enumerator));
             (*cursor).eof = !enumerator.MoveNext();
+            (*cursor).rowid = 1;
 
             PropertyInfo[]? properties = moduleParams.GetProperties();
             (*cursor).properties = properties != null ? GCHandle.ToIntPtr(GCHandle.Alloc(properties)) : IntPtr.Zero;
@@ -98,6 +103,19 @@ namespace SqliteDna.Integration
         [UnmanagedCallersOnly(CallConvs = new[] { typeof(CallConvCdecl) })]
         private static unsafe int xClose(IntPtr cursor)
         {
+            var e = (*(Cursor*)cursor).enumerator;
+            if (e != IntPtr.Zero)
+            {
+                GCHandle.FromIntPtr(e).Free();
+            }
+
+            var p = (*(Cursor*)cursor).properties;
+            if (p != IntPtr.Zero)
+            {
+                GCHandle.FromIntPtr(p).Free();
+            }
+
+            Sqlite.GetAPI().free(cursor);
             return Sqlite.SQLITE_OK;
         }
 
@@ -112,6 +130,7 @@ namespace SqliteDna.Integration
         {
             IEnumerator enumerator = (IEnumerator)GCHandle.FromIntPtr((*(Cursor*)cursor).enumerator).Target!;
             (*(Cursor*)cursor).eof = !enumerator.MoveNext();
+            (*(Cursor*)cursor).rowid++;
             return Sqlite.SQLITE_OK;
         }
 
@@ -147,6 +166,7 @@ namespace SqliteDna.Integration
         [UnmanagedCallersOnly(CallConvs = new[] { typeof(CallConvCdecl) })]
         private static unsafe int xRowid(IntPtr cursor, IntPtr pRowid)
         {
+            *(long*)pRowid = (*(Cursor*)cursor).rowid;
             return Sqlite.SQLITE_OK;
         }
 
@@ -181,6 +201,7 @@ namespace SqliteDna.Integration
             public IntPtr enumerator;
             public bool eof;
             public IntPtr properties;
+            public long rowid;
         };
     }
 }

@@ -32,6 +32,7 @@ namespace SqliteDna.SourceGenerator
 
 [CREATE_FUNCTIONS]
 [CREATE_TABLE_FUNCTIONS]
+[CREATE_VIRTUAL_TABLES]
             return SqliteDna.Integration.Sqlite.SQLITE_OK;
         }
     }
@@ -131,9 +132,27 @@ namespace SqliteDna.SourceGenerator
                 }
             }
 
+            string createVirtualTables = "";
+            foreach (var i in receiver.VirtualTables)
+            {
+                string functionArguments = "";
+                int valueIndex = 0;
+                foreach (var p in i.Parameters)
+                {
+                    if (valueIndex > 0)
+                        functionArguments += ", ";
+                    functionArguments += $"SqliteDna.Integration.Sqlite.Argument{AdaptType(p.Type)}(arguments, {valueIndex})";
+                    ++valueIndex;
+                }
+
+                string functionBody = $"{Util.GetFullMethodName(i)}({functionArguments})";
+                createVirtualTables += $"            SqliteDna.Integration.Sqlite.CreateVirtualTableModule(\"{i.Name}\", (arguments) => {functionBody});\r\n";
+            }
+
             source = source.Replace("[FUNCTIONS]", functions);
             source = source.Replace("[CREATE_FUNCTIONS]", createFunctions);
             source = source.Replace("[CREATE_TABLE_FUNCTIONS]", createTableFunctions);
+            source = source.Replace("[CREATE_VIRTUAL_TABLES]", createVirtualTables);
 
             context.AddSource($"SqliteDna.Init.g.cs", source);
         }
@@ -206,6 +225,7 @@ namespace SqliteDna.SourceGenerator
         {
             public List<IMethodSymbol> Functions { get; } = new List<IMethodSymbol>();
             public List<IMethodSymbol> TableFunctions { get; } = new List<IMethodSymbol>();
+            public List<IMethodSymbol> VirtualTables { get; } = new List<IMethodSymbol>();
 
             public void OnVisitSyntaxNode(GeneratorSyntaxContext context)
             {
@@ -216,6 +236,8 @@ namespace SqliteDna.SourceGenerator
                         Functions.Add(methodSymbol);
                     if (methodSymbol.GetAttributes().Any(a => a.AttributeClass?.ToDisplayString(fullNameFormat) == "SqliteDna.Integration.SqliteTableFunctionAttribute"))
                         TableFunctions.Add(methodSymbol);
+                    if (methodSymbol.GetAttributes().Any(a => a.AttributeClass?.ToDisplayString(fullNameFormat) == "SqliteDna.Integration.SqliteVirtualTableAttribute"))
+                        VirtualTables.Add(methodSymbol);
                 }
             }
 

@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -9,6 +10,7 @@ namespace SqliteDna.Integration
     {
         public const int SQLITE_OK = 0;
         public const int SQLITE_ERROR = 1;
+        public const int SQLITE_READONLY = 8;
 
         public const int SQLITE_INTEGER = 1;
         public const int SQLITE_FLOAT = 2;
@@ -51,6 +53,21 @@ namespace SqliteDna.Integration
             return sqliteApi.value_int(values[i]);
         }
 
+        public static unsafe int ValueType(IntPtr value)
+        {
+            return sqliteApi.value_type(value);
+        }
+
+        public static unsafe long ValueInt64(IntPtr value)
+        {
+            return sqliteApi.value_int64(value);
+        }
+
+        public static unsafe double ValueDouble(IntPtr value)
+        {
+            return sqliteApi.value_double(value);
+        }
+
         public static unsafe long ValueInt64(IntPtr* values, int i)
         {
             return sqliteApi.value_int64(values[i]);
@@ -64,6 +81,15 @@ namespace SqliteDna.Integration
         public static unsafe double ValueDouble(IntPtr* values, int i)
         {
             return sqliteApi.value_double(values[i]);
+        }
+
+        public static unsafe string? ValueString(IntPtr value)
+        {
+            byte* text = sqliteApi.value_text(value);
+            if (text == null)
+                return null;
+
+            return Encoding.UTF8.GetString(text, sqliteApi.value_bytes(value));
         }
 
         public static unsafe DateTime ValueDateTime(IntPtr* values, int i)
@@ -102,6 +128,17 @@ namespace SqliteDna.Integration
                 return null;
 
             return Encoding.UTF8.GetString(text, sqliteApi.value_bytes(values[i]));
+        }
+
+        public static unsafe byte[]? ValueBlob(IntPtr value)
+        {
+            byte* pBytes = sqliteApi.value_blob(value);
+            if (pBytes == null)
+                return null;
+
+            byte[] result = new byte[sqliteApi.value_bytes(value)];
+            Marshal.Copy(new IntPtr(pBytes), result, 0, result.Length);
+            return result;
         }
 
         public static unsafe byte[]? ValueBlob(IntPtr* values, int i)
@@ -221,12 +258,39 @@ namespace SqliteDna.Integration
             return CreateModule(name, new DynamicFunctionModuleParams(func));
         }
 
+        public static unsafe int CreateVirtualTableModule(string name, Func<string[]?, ISqliteVirtualTable> factory)
+        {
+            return CreateManagedVirtualTableModule(name, factory);
+        }
+
         private static unsafe int CreateModule(string name, BaseFunctionModuleParams moduleParams)
         {
             FunctionModule functionModule = new();
-            GCHandle.Alloc(functionModule);
-            GCHandle gch = GCHandle.Alloc(moduleParams);
+            KeepAlivePinned(functionModule);
+            var gch = KeepAlive(moduleParams);
             return sqliteApi.create_module(db, StringToSqliteUtf8(name, out _), ref functionModule.module, GCHandle.ToIntPtr(gch));
+        }
+
+        private static unsafe int CreateManagedVirtualTableModule(string name, Func<string[]?, ISqliteVirtualTable> factory)
+        {
+            ManagedVirtualTableModule module = new();
+            KeepAlivePinned(module);
+            var gch = KeepAlive(factory);
+            return sqliteApi.create_module(db, StringToSqliteUtf8(name, out _), ref module.module, GCHandle.ToIntPtr(gch));
+        }
+
+        private static GCHandle KeepAlivePinned(object o)
+        {
+            var handle = GCHandle.Alloc(o, GCHandleType.Pinned);
+            pinnedHandles.Add(handle);
+            return handle;
+        }
+
+        private static GCHandle KeepAlive(object o)
+        {
+            var handle = GCHandle.Alloc(o);
+            handles.Add(handle);
+            return handle;
         }
 
         internal static unsafe void ResultObject(IntPtr context, object? o)
@@ -272,5 +336,7 @@ namespace SqliteDna.Integration
 
         private static sqlite3_api_routines sqliteApi;
         private static IntPtr db;
+        private static readonly List<GCHandle> handles = new();
+        private static readonly List<GCHandle> pinnedHandles = new();
     }
 }

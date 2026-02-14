@@ -205,6 +205,48 @@ public static DynamicTable csv(string filename, string schema)
 }
 ```
 
+### Writable virtual tables
+
+Sqlite-DNA also supports implementing a full SQLite virtual table module (including `INSERT`/`UPDATE`/`DELETE`) by returning an `ISqliteVirtualTable` from a method marked with `[SqliteVirtualTable]`.
+
+- Implement `ISqliteVirtualTable` for read-only virtual tables.
+- Implement `ISqliteWritableVirtualTable` to handle writes via `xUpdate`.
+- Return the chosen rowid from `Update(...)` via `SqliteVirtualTableUpdateResult`.
+
+Example:
+
+```csharp
+using SqliteDna.Integration;
+
+public static class MyVirtualTables
+{
+    [SqliteVirtualTable]
+    public static ISqliteVirtualTable MyWritableTable()
+    {
+        return new MyTable();
+    }
+
+    private sealed class MyTable : ISqliteWritableVirtualTable
+    {
+        public string Schema => "\"id\" INTEGER, \"name\" TEXT";
+
+        public ISqliteVirtualTableCursor OpenCursor() => throw new NotImplementedException();
+
+        public SqliteVirtualTableUpdateResult Update(SqliteVirtualTableUpdate update) =>
+            throw new NotImplementedException();
+    }
+}
+```
+
+In SQLite:
+
+```sql
+CREATE VIRTUAL TABLE t USING MyWritableTable();
+INSERT INTO t(id, name) VALUES (1, 'Alice');
+UPDATE t SET name = 'Bob' WHERE id = 1;
+DELETE FROM t WHERE id = 1;
+```
+
 ### Testing
 
 You can easily test your extension in SQLite using the SqliteDna.Testing package.

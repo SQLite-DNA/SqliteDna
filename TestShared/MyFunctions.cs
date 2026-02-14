@@ -227,6 +227,12 @@ namespace TestShared
             return new(schema, new List<object[]> { valuesArray });
         }
 
+        [SqliteVirtualTable]
+        public static ISqliteVirtualTable MyWritableTable()
+        {
+            return new InMemoryWritableTable();
+        }
+
         public static int Noo1()
         {
             return 1;
@@ -241,5 +247,130 @@ namespace TestShared
         }
 
         private static int internalCounter;
+
+        private sealed class InMemoryWritableTable : ISqliteWritableVirtualTable
+        {
+            private readonly List<Row> rows = new();
+            private long nextRowId = 1;
+
+            public string Schema => "\"id\" INTEGER, \"name\" TEXT";
+
+            public ISqliteVirtualTableCursor OpenCursor() => new InMemoryWritableCursor(this);
+
+            public SqliteVirtualTableUpdateResult Update(SqliteVirtualTableUpdate update)
+            {
+                switch (update.Kind)
+                {
+                    case SqliteVirtualTableUpdateKind.Delete:
+                    {
+                        if (update.OldRowId == null)
+                            throw new InvalidOperationException("DELETE requires old rowid.");
+
+                        var idx = rows.FindIndex(r => r.RowId == update.OldRowId.Value);
+                        if (idx >= 0)
+                            rows.RemoveAt(idx);
+                        return new SqliteVirtualTableUpdateResult(update.OldRowId.Value);
+                    }
+
+                    case SqliteVirtualTableUpdateKind.Insert:
+                    {
+                        var rowId = update.NewRowId ?? nextRowId++;
+                        if (rows.Any(r => r.RowId == rowId))
+                            throw new InvalidOperationException("Rowid already exists.");
+
+                        var row = new Row(rowId, GetInt64(update.ColumnValues, 0), GetString(update.ColumnValues, 1));
+                        rows.Add(row);
+                        if (rowId >= nextRowId)
+                            nextRowId = rowId + 1;
+                        return new SqliteVirtualTableUpdateResult(rowId);
+                    }
+
+                    case SqliteVirtualTableUpdateKind.Update:
+                    {
+                        if (update.OldRowId == null)
+                            throw new InvalidOperationException("UPDATE requires old rowid.");
+
+                        var idx = rows.FindIndex(r => r.RowId == update.OldRowId.Value);
+                        if (idx < 0)
+                            throw new InvalidOperationException("Row not found.");
+
+                        var current = rows[idx];
+                        var targetRowId = update.NewRowId ?? current.RowId;
+                        if (targetRowId != current.RowId && rows.Any(r => r.RowId == targetRowId))
+                            throw new InvalidOperationException("Rowid already exists.");
+
+                        rows[idx] = new Row(
+                            targetRowId,
+                            GetInt64(update.ColumnValues, 0),
+                            GetString(update.ColumnValues, 1));
+
+                        if (targetRowId >= nextRowId)
+                            nextRowId = targetRowId + 1;
+
+                        return new SqliteVirtualTableUpdateResult(targetRowId);
+                    }
+
+                    default:
+                        throw new InvalidOperationException("Unknown update kind.");
+                }
+            }
+
+            private static long? GetInt64(IReadOnlyList<SqliteValue> values, int index)
+            {
+                if (index >= values.Count)
+                    return null;
+                return values[index].IsNull ? null : values[index].GetInt64();
+            }
+
+            private static string? GetString(IReadOnlyList<SqliteValue> values, int index)
+            {
+                if (index >= values.Count)
+                    return null;
+                return values[index].IsNull ? null : values[index].GetString();
+            }
+
+            private sealed record Row(long RowId, long? Id, string? Name);
+
+            private sealed class InMemoryWritableCursor : ISqliteVirtualTableCursor
+            {
+                private readonly InMemoryWritableTable table;
+                private int index;
+
+                public InMemoryWritableCursor(InMemoryWritableTable table)
+                {
+                    this.table = table;
+                    index = 0;
+                }
+
+                public void Dispose()
+                {
+                }
+
+                public void Filter(SqliteVirtualTableFilter filter)
+                {
+                    index = 0;
+                }
+
+                public void Next()
+                {
+                    index++;
+                }
+
+                public bool Eof => index >= table.rows.Count;
+
+                public long RowId => table.rows[index].RowId;
+
+                public object? GetColumnValue(int columnIndex)
+                {
+                    var row = table.rows[index];
+                    return columnIndex switch
+                    {
+                        0 => row.Id,
+                        1 => row.Name,
+                        _ => null,
+                    };
+                }
+            }
+        }
     }
 }

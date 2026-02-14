@@ -319,7 +319,7 @@ namespace SqliteDna.Integration
     [StructLayout(LayoutKind.Sequential)]
     internal unsafe struct sqlite3_module
     {
-        int version; //int iVersion;
+        public int iVersion; //int iVersion;
         public delegate* unmanaged[Cdecl]<IntPtr, IntPtr, int, IntPtr, IntPtr*, IntPtr, int> xCreate; //int (* xCreate) (sqlite3*, void* pAux,
         //             int argc, const char*const* argv,
         //             sqlite3_vtab **ppVTab, char**);
@@ -337,11 +337,11 @@ namespace SqliteDna.Integration
         public delegate* unmanaged[Cdecl]<IntPtr, int> xEof; //  int (* xEof) (sqlite3_vtab_cursor*);
         public delegate* unmanaged[Cdecl]<IntPtr, IntPtr, int, int> xColumn; //  int (* xColumn) (sqlite3_vtab_cursor*, sqlite3_context*, int);
         public delegate* unmanaged[Cdecl]<IntPtr, IntPtr, int> xRowid; //  int (* xRowid) (sqlite3_vtab_cursor*, sqlite3_int64* pRowid);
-        IntPtr p12; //  int (* xUpdate) (sqlite3_vtab*, int, sqlite3_value**, sqlite3_int64*);
-        IntPtr p13; //  int (* xBegin) (sqlite3_vtab* pVTab);
-        IntPtr p14; //  int (* xSync) (sqlite3_vtab* pVTab);
-        IntPtr p15; //  int (* xCommit) (sqlite3_vtab* pVTab);
-        IntPtr p16; //  int (* xRollback) (sqlite3_vtab* pVTab);
+        public delegate* unmanaged[Cdecl]<IntPtr, int, IntPtr, IntPtr, int> xUpdate; //  int (* xUpdate) (sqlite3_vtab*, int, sqlite3_value**, sqlite3_int64*);
+        public delegate* unmanaged[Cdecl]<IntPtr, int> xBegin; //  int (* xBegin) (sqlite3_vtab* pVTab);
+        public delegate* unmanaged[Cdecl]<IntPtr, int> xSync; //  int (* xSync) (sqlite3_vtab* pVTab);
+        public delegate* unmanaged[Cdecl]<IntPtr, int> xCommit; //  int (* xCommit) (sqlite3_vtab* pVTab);
+        public delegate* unmanaged[Cdecl]<IntPtr, int> xRollback; //  int (* xRollback) (sqlite3_vtab* pVTab);
         IntPtr p17; //  int (* xFindFunction) (sqlite3_vtab* pVtab, int nArg, const char* zName,
         //                       void (** pxFunc) (sqlite3_context*, int, sqlite3_value**),
         //                       void** ppArg);
