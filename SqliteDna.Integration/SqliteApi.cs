@@ -359,9 +359,9 @@ namespace SqliteDna.Integration
     [StructLayout(LayoutKind.Sequential)]
     internal unsafe struct sqlite3_vtab
     {
-        IntPtr pModule; //const sqlite3_module* pModule;  /* The module for this virtual table */
-        int nRef; // int nRef;                       /* Number of open cursors */
-        IntPtr zErrMsg; //char* zErrMsg;                  /* Error message from sqlite3_mprintf() */
+        internal IntPtr pModule; //const sqlite3_module* pModule;  /* The module for this virtual table */
+        internal int nRef; // int nRef;                       /* Number of open cursors */
+        internal IntPtr zErrMsg; //char* zErrMsg;                  /* Error message from sqlite3_mprintf() */
         /* Virtual table implementations will typically add additional fields */
     };
 

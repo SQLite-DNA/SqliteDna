@@ -45,9 +45,9 @@ namespace SqliteDna.Integration
             {
                 table = factory(args);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                // Best-effort: SQLite expects an error string via zErrMsg, but we don't currently plumb sqlite3_mprintf here.
+                SetCreateError(err, ex.Message);
                 return Sqlite.SQLITE_ERROR;
             }
 
@@ -203,8 +203,16 @@ namespace SqliteDna.Integration
             {
                 var old = new SqliteValue(values[0]);
                 var oldId = old.IsNull ? (long?)null : old.GetInt64();
-                writable.Update(new SqliteVirtualTableUpdate(SqliteVirtualTableUpdateKind.Delete, oldId, null, Array.Empty<SqliteValue>()));
-                return Sqlite.SQLITE_OK;
+                try
+                {
+                    writable.Update(new SqliteVirtualTableUpdate(SqliteVirtualTableUpdateKind.Delete, oldId, null, Array.Empty<SqliteValue>()));
+                    return Sqlite.SQLITE_OK;
+                }
+                catch (Exception ex)
+                {
+                    SetVirtualTableError(vtab, ex.Message);
+                    return Sqlite.SQLITE_ERROR;
+                }
             }
 
             var oldRowIdValue = new SqliteValue(values[0]);
@@ -219,9 +227,17 @@ namespace SqliteDna.Integration
             }
 
             var kind = oldRowId == null ? SqliteVirtualTableUpdateKind.Insert : SqliteVirtualTableUpdateKind.Update;
-            var result = writable.Update(new SqliteVirtualTableUpdate(kind, oldRowId, newRowId, columnValues));
-            *(long*)pRowid = result.RowId;
-            return Sqlite.SQLITE_OK;
+            try
+            {
+                var result = writable.Update(new SqliteVirtualTableUpdate(kind, oldRowId, newRowId, columnValues));
+                *(long*)pRowid = result.RowId;
+                return Sqlite.SQLITE_OK;
+            }
+            catch (Exception ex)
+            {
+                SetVirtualTableError(vtab, ex.Message);
+                return Sqlite.SQLITE_ERROR;
+            }
         }
 
         [UnmanagedCallersOnly(CallConvs = new[] { typeof(CallConvCdecl) })]
@@ -278,13 +294,33 @@ namespace SqliteDna.Integration
             return s;
         }
 
+        private static unsafe void SetCreateError(IntPtr err, string message)
+        {
+            if (err == IntPtr.Zero)
+                return;
+
+            *(IntPtr*)err = (IntPtr)Sqlite.StringToSqliteUtf8(message, out _);
+        }
+
+        private static unsafe void SetVirtualTableError(IntPtr vtab, string message)
+        {
+            if (vtab == IntPtr.Zero)
+                return;
+
+            ref var nativeVtab = ref (*(VTab*)vtab).vtab;
+            if (nativeVtab.zErrMsg != IntPtr.Zero)
+                Sqlite.GetAPI().free(nativeVtab.zErrMsg);
+
+            nativeVtab.zErrMsg = (IntPtr)Sqlite.StringToSqliteUtf8(message, out _);
+        }
+
         public sqlite3_module module;
         private const int defaultCreationArgc = 3;
 
         [StructLayout(LayoutKind.Sequential)]
         private unsafe struct VTab
         {
-            private sqlite3_vtab vtab;
+            internal sqlite3_vtab vtab;
 
             public IntPtr tableHandle;
         };
